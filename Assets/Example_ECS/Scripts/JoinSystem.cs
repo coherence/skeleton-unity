@@ -25,7 +25,7 @@ class JoinSystem : SystemBase
     {
         Debug.Log("The 'JoinSystem' will try to connect...");
         var coherenceRuntime = World.GetOrCreateSystem<CoherenceRuntimeSystem>();
-        coherenceRuntime.Connect("127.0.0.1:32001", ConnectionType.Simulator);
+        coherenceRuntime.Connect("127.0.0.1:32001", ConnectionType.Client);
     }
 
     protected override void OnUpdate()
@@ -42,19 +42,9 @@ class JoinSystem : SystemBase
             CreateWorldQuery();
         }
 
-        if(Input.GetKeyDown(KeyCode.Return) && coherenceRuntime.IsConnected && !localPlayerCreated)
+        if(coherenceRuntime.IsConnected && !localPlayerCreated)
         {
             TryToCreatePlayer();
-        }
-
-        //var keyboard = Keyboard.current;
-        if(Input.GetKeyDown(KeyCode.Space) && player.Index != 0) {
-            EntityManager.SetComponentData(player, new Translation()
-            {
-                Value = new float3(UnityEngine.Random.Range(-5, 5),
-                                   0.25f,
-                                   UnityEngine.Random.Range(-5, 5))
-            });
         }
 
         Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
@@ -132,6 +122,11 @@ class JoinSystem : SystemBase
             EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
             {
 
+            });
+
+            EntityManager.AddComponentData(newPlayerEntity, new Input
+            {
+                Value = new float2()
             });
         }
 
