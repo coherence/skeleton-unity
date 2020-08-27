@@ -42,7 +42,7 @@ class JoinSystem : SystemBase
             CreateWorldQuery();
         }
 
-        if(coherenceRuntime.IsConnected && !localPlayerCreated)
+        if(Input.GetKeyDown(KeyCode.Return) && coherenceRuntime.IsConnected && !localPlayerCreated)
         {
             TryToCreatePlayer();
         }
@@ -52,17 +52,17 @@ class JoinSystem : SystemBase
             EntityManager.SetComponentData(player, new Translation()
             {
                 Value = new float3(UnityEngine.Random.Range(-5, 5),
-                                   0.5f,
+                                   0.25f,
                                    UnityEngine.Random.Range(-5, 5))
             });
         }
 
-        Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
-                                                     in Player player) =>
-        {
-            var newEntity = CreatePlayer(false, new Entity());
-            ReplaceEntity(networkEntity, newEntity);
-        }).WithStructuralChanges().WithoutBurst().Run();
+        // Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
+        //                                              in Player player) =>
+        // {
+        //     var newEntity = CreatePlayer(false, new Entity());
+        //     ReplaceEntity(networkEntity, newEntity);
+        // }).WithStructuralChanges().WithoutBurst().Run();
     }
 
     void CreateWorldQuery()
@@ -119,7 +119,7 @@ class JoinSystem : SystemBase
 
         EntityManager.AddComponentData(newPlayerEntity, new Translation
         {
-            Value = new float3(playerCount * 2.0f, 0.5f, 0.123f)
+            Value = new float3(playerCount * 2.0f, 0.25f, 0.0f)
         });
 
         if(localPlayer)
@@ -128,7 +128,15 @@ class JoinSystem : SystemBase
             {
                 Authority = authority,
             });
+
+            EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
+            {
+
+            });
         }
+
+        var localOrRemote = localPlayer ? "local" : "remote";
+        Debug.Log($"Done creating {localOrRemote} player {newPlayerEntity.Index}");
 
         return newPlayerEntity;
     }
