@@ -4,8 +4,8 @@ using Unity.Mathematics;
 //using UnityEngine.InputSystem;
 using Coherence.Replication.Client.Unity.Ecs;
 using Coherence.Replication.Client.Connection;
-//using Coherence.Generated.Internal.FirstProject;
-using FirstProject;
+using Coherence.Generated.Internal.FirstProject;
+using Coherence.Generated.FirstProject;
 using Coherence.Sdk.Unity;
 using UnityEngine;
 
@@ -42,7 +42,7 @@ class JoinSystem : SystemBase
 
     void StartWorldQuery()
     {
-        var localUser = entityManager.CreateEntityQuery(typeof(LocalUser));
+        var localUser = EntityManager.CreateEntityQuery(typeof(LocalUser));
 
         if( localUser.CalculateEntityCount() == 0 )
         {

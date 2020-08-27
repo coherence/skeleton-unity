@@ -1807,7 +1807,7 @@ namespace Coherence.Sdk.Unity
             log = World.GetOrCreateSystem<NetworkConnectSystem>().Log;
 
             var commandBuffer = World.GetOrCreateSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer()
-                .ToConcurrent();
+                .AsParallelWriter();
 
             World.GetOrCreateSystem<OfflineEntityDetectorSystem>().Enabled = offline;
             World.GetOrCreateSystem<SyncSendSystem>().Enabled = !offline;
