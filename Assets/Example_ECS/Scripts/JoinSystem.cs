@@ -8,12 +8,18 @@ using Coherence.Generated.Internal.FirstProject;
 using Coherence.Generated.FirstProject;
 using Coherence.Sdk.Unity;
 using UnityEngine;
+using Unity.Rendering;
+using System.Reflection;
+using System;
+using System.Linq;
 
 [AlwaysUpdateSystem]
 class JoinSystem : SystemBase
 {
-    static bool hasSaidWeAreConnected = false;
-    static bool worldQueryCreated = false;
+    bool hasSaidWeAreConnected = false;
+    bool worldQueryCreated = false;
+    bool localPlayerCreated = false;
+    Entity player;
 
     protected override void OnStartRunning()
     {
@@ -33,18 +39,37 @@ class JoinSystem : SystemBase
 
         if(coherenceRuntime.IsConnected && !worldQueryCreated)
         {
-            Debug.Log("Trying to start World Query...");
-            StartWorldQuery();
+            CreateWorldQuery();
+        }
+
+        if(coherenceRuntime.IsConnected && !localPlayerCreated)
+        {
+            TryToCreatePlayer();
         }
 
         //var keyboard = Keyboard.current;
+        if(Input.GetKeyDown(KeyCode.Space) && player.Index != 0) {
+            EntityManager.SetComponentData(player, new Translation()
+            {
+                Value = new float3(UnityEngine.Random.Range(-5, 5),
+                                   0.5f,
+                                   UnityEngine.Random.Range(-5, 5))
+            });
+        }
+
+        Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
+                                                     in Player player) =>
+        {
+            var newEntity = CreatePlayer(false, new Entity());
+            ReplaceEntity(networkEntity, newEntity);
+        }).WithStructuralChanges().WithoutBurst().Run();
     }
 
-    void StartWorldQuery()
+    void CreateWorldQuery()
     {
-        var localUser = EntityManager.CreateEntityQuery(typeof(LocalUser));
+        var localUserQuery = EntityManager.CreateEntityQuery(typeof(LocalUser));
 
-        if( localUser.CalculateEntityCount() == 0 )
+        if(localUserQuery.CalculateEntityCount() == 0)
         {
             return;
         }
@@ -53,7 +78,7 @@ class JoinSystem : SystemBase
 
         EntityManager.AddComponentData(worldQueryEntity, new CoherenceSimulateComponent
         {
-            Authority = localUser.GetSingletonEntity(),
+            Authority = localUserQuery.GetSingletonEntity(),
         });
 
         EntityManager.AddComponentData(worldQueryEntity, new WorldPositionQuery
@@ -61,7 +86,148 @@ class JoinSystem : SystemBase
             position = new float3(0, 0, 0),
         });
 
-        Debug.Log("World query is go!");
         worldQueryCreated = true;
+    }
+
+    void TryToCreatePlayer()
+    {
+        var localUserQuery = EntityManager.CreateEntityQuery(typeof(LocalUser));
+
+        if(localUserQuery.CalculateEntityCount() == 0)
+        {
+            return;
+        }
+
+        var localUserAuthority = localUserQuery.GetSingletonEntity();
+        player = CreatePlayer(true, localUserAuthority);
+        localPlayerCreated = true;
+    }
+
+    private Entity CreatePlayer(bool localPlayer, Entity authority)
+    {
+        var playerPrefabEntity = PrefabHolder.Get().playerPrefabEntity;
+        var newPlayerEntity = World.EntityManager.Instantiate(playerPrefabEntity);
+
+        var query = EntityManager.CreateEntityQuery(typeof(Player));
+        var playerCount = query.CalculateEntityCount();
+        Debug.Log($"There are {playerCount} pre-existing players in the game world.");
+
+        EntityManager.AddComponentData(newPlayerEntity, new Player()
+        {
+
+        });
+
+        EntityManager.AddComponentData(newPlayerEntity, new Translation
+        {
+            Value = new float3(playerCount * 2.0f, 0.5f, 0.123f)
+        });
+
+        if(localPlayer)
+        {
+            EntityManager.AddComponentData(newPlayerEntity, new CoherenceSimulateComponent
+            {
+                Authority = authority,
+            });
+        }
+
+        return newPlayerEntity;
+    }
+
+    private void ReplaceEntity(Entity networkEntity, Entity newEntity)
+    {
+#if UNITY_EDITOR
+        EntityManager.SetName(newEntity, "Remote Player");
+#endif
+
+        //EntityManager.AddComponentData(newEntity, EntityManager.GetComponentData<CoherenceSimulateComponent>(networkEntity));
+        CopyComponents(networkEntity, newEntity);
+
+        // Remap
+        var mapper = World.GetExistingSystem<SyncSendSystem>().Sender.Mapper;
+        if (!mapper.ToCoherenceEntityId(networkEntity, out var entityId))
+        {
+            Debug.LogError("Networked Entity not found in mapper: " + networkEntity); // Should not happen
+        }
+        mapper.Remove(entityId);
+        mapper.Add(entityId, newEntity);
+
+        EntityManager.DestroyEntity(networkEntity);
+
+        Debug.Log(string.Format("Replaced networked Entity {0}, {1} with {2}.", "?", networkEntity, newEntity));
+    }
+
+    public void CopyComponents(Entity src, Entity dst)
+    {
+        var entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+        var types = entityManager.GetComponentTypes(src);
+
+        foreach (ComponentType t in types)
+        {
+            //Debug.LogWarning($"TYPE: {t}");
+            if (t == typeof(LinkedEntityGroup))
+            {
+                continue;
+            }
+
+            if (!entityManager.HasComponent(dst, t))
+            {
+                entityManager.AddComponent(dst, t);
+            }
+
+            MethodInfo getMethod = t.IsBuffer ? typeof(EntityManager).GetMethod("GetBuffer") : typeof(EntityManager).GetMethod("GetComponentData");
+            if (getMethod != null)
+            {
+                MethodInfo getMethodGeneric = getMethod.MakeGenericMethod(t.GetManagedType());
+                object cmp;
+                try
+                {
+                    cmp = getMethodGeneric.Invoke(entityManager, new object[] { src });
+                }
+                catch (Exception)
+                {
+                    var setMethod = typeof(EntityManager).GetMethods().Single(
+                                                                              m =>
+                                                                              m.Name == (t.IsBuffer ? "AddBuffer" : "AddComponent") &&
+                                                                              m.GetParameters().Length == 2 &&
+                                                                              m.GetParameters()[0].ParameterType == typeof(Entity) &&
+                                                                              !m.IsGenericMethod
+                                                                              );
+
+
+                    if (setMethod != null)
+                    {
+                        setMethod.Invoke(entityManager, new object[] { dst, t });
+                    }
+
+                    continue;
+                }
+
+                if (cmp != null)
+                {
+                    if (t.IsBuffer)
+                    {
+                        MethodInfo setMethod = typeof(EntityManager).GetMethod("AddBuffer");
+
+                        if (setMethod != null)
+                        {
+                            MethodInfo setMethodGeneric = setMethod.MakeGenericMethod(t.GetManagedType());
+                            setMethodGeneric.Invoke(entityManager, new object[] { dst });
+                        }
+                    }
+                    else
+                    {
+                        var tt = Convert.ChangeType(cmp, t.GetManagedType());
+
+                        MethodInfo setMethod = typeof(EntityManager).GetMethod("SetComponentData");
+
+                        if (setMethod != null)
+                        {
+                            MethodInfo setMethodGeneric = setMethod.MakeGenericMethod(t.GetManagedType());
+                            setMethodGeneric.Invoke(entityManager, new object[] { dst, tt });
+                        }
+                    }
+                }
+            }
+        }
     }
 }
