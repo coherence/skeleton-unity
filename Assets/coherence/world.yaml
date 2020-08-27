@@ -1,0 +1,6 @@
+---
+values:
+  - id: 1
+    components:
+      WorldPositionComponent:
+        pos: [1, 2, 3]
