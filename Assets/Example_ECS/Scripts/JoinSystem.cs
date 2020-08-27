@@ -57,12 +57,12 @@ class JoinSystem : SystemBase
             });
         }
 
-        // Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
-        //                                              in Player player) =>
-        // {
-        //     var newEntity = CreatePlayer(false, new Entity());
-        //     ReplaceEntity(networkEntity, newEntity);
-        // }).WithStructuralChanges().WithoutBurst().Run();
+        Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
+                                                     in Player player) =>
+        {
+            var newEntity = CreatePlayer(false, new Entity());
+            ReplaceEntity(networkEntity, newEntity);
+        }).WithStructuralChanges().WithoutBurst().Run();
     }
 
     void CreateWorldQuery()
