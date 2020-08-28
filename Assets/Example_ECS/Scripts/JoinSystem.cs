@@ -22,6 +22,8 @@ class JoinSystem : SystemBase
 
     protected override void OnUpdate()
     {
+        // When we are connected we try to get hold of our LocalUser entity,
+        // which allows us to create a WorldPositionQuery and Player.
         if(coherenceRuntime.IsConnected && localUserAuthority.Equals(Entity.Null))
         {
             var localUserQuery = EntityManager.CreateEntityQuery(typeof(LocalUser));
@@ -29,20 +31,27 @@ class JoinSystem : SystemBase
             if(localUserQuery.CalculateEntityCount() > 0)
             {
                 localUserAuthority = localUserQuery.GetSingletonEntity();
-                CreateWorldQuery(localUserAuthority);
+                CreateWorldPositionQuery(localUserAuthority);
                 CreatePlayer(localUserAuthority);
             }
         }
 
-        Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity,
-                                                     in Player player) =>
+        // Detect remotely simulated Player entities and instantiate a proper Prefab for them.
+        Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity, in Player player) =>
         {
-            var newEntity = CreatePlayer(new Entity());
+            var noAuthority = new Entity();
+            var newEntity = CreatePlayer(noAuthority);
             CoherenceUtil.ReplaceEntity(EntityManager, networkEntity, newEntity);
-        }).WithStructuralChanges().WithoutBurst().Run();
+        }
+        ).WithStructuralChanges().WithoutBurst().Run();
+
+        if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
+        {
+            CreatePlayer(localUserAuthority);
+        }
     }
 
-    void CreateWorldQuery(Entity authority)
+    void CreateWorldPositionQuery(Entity authority)
     {
         var worldQueryEntity = EntityManager.CreateEntity();
 
@@ -59,39 +68,50 @@ class JoinSystem : SystemBase
 
     private Entity CreatePlayer(Entity authority)
     {
-        var localPlayer = !authority.Equals(Entity.Null);
+        var queryForPlayers = EntityManager.CreateEntityQuery(typeof(Player));
+        var playerCount = queryForPlayers.CalculateEntityCount();
 
         var playerPrefabEntity = PrefabHolder.Get().playerPrefabEntity;
         var newPlayerEntity = World.EntityManager.Instantiate(playerPrefabEntity);
 
-        var query = EntityManager.CreateEntityQuery(typeof(Player));
-        var playerCount = query.CalculateEntityCount();
-
+        // The empty 'Player' component acts as a tag to query for.
         EntityManager.AddComponentData(newPlayerEntity, new Player()
         {
 
         });
 
-        EntityManager.AddComponentData(newPlayerEntity, new Translation
-        {
-            Value = new float3(playerCount * 2.0f, 0.25f, 0.0f)
-        });
+        var isLocalPlayer = !authority.Equals(Entity.Null);
 
-        if(localPlayer)
+        if(isLocalPlayer)
         {
+            // This component makes us responsible for the simulation of the Entity.
             EntityManager.AddComponentData(newPlayerEntity, new CoherenceSimulateComponent
             {
                 Authority = authority,
             });
 
+            // This component makes the Entity disappear if we log out or disconnect.
             EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
             {
 
             });
 
+            // This component makes our keyboard input affect the Entity.
             EntityManager.AddComponentData(newPlayerEntity, new Input
             {
                 Value = new float2()
+            });
+
+            // Spawn players in a circle around the center of the level.
+            var angle = math.PI * 0.25f * (float)playerCount;
+            var radius = 3.5f;
+            Debug.Log($"angle: {angle}, radius: {radius}, playerCount: {playerCount}");
+
+            EntityManager.AddComponentData(newPlayerEntity, new Translation
+            {
+                Value = new float3(math.cos(angle) * radius,
+                                   0.25f,
+                                   math.sin(angle) * radius)
             });
         }
 
