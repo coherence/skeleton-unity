@@ -32,23 +32,18 @@ class JoinSystem : SystemBase
             {
                 localUserAuthority = localUserQuery.GetSingletonEntity();
                 CreateWorldPositionQuery(localUserAuthority);
-                CreatePlayer(localUserAuthority);
+                CreateLocalPlayer(localUserAuthority);
             }
         }
 
         // Detect remotely simulated Player entities and instantiate a proper Prefab for them.
         Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity, in Player player) =>
         {
-            var noAuthority = new Entity();
-            var newEntity = CreatePlayer(noAuthority);
-            CoherenceUtil.ReplaceEntity(EntityManager, networkEntity, newEntity);
+            var playerPrefabEntity = PrefabHolder.Get().playerPrefabEntity;
+            var newPlayerEntity = World.EntityManager.Instantiate(playerPrefabEntity);
+            CoherenceUtil.ReplaceEntity(EntityManager, networkEntity, newPlayerEntity);
         }
-        ).WithStructuralChanges().WithoutBurst().Run();
-
-        if(UnityEngine.Input.GetKeyDown(KeyCode.Space))
-        {
-            CreatePlayer(localUserAuthority);
-        }
+            ).WithStructuralChanges().WithoutBurst().Run();
     }
 
     void CreateWorldPositionQuery(Entity authority)
@@ -66,11 +61,8 @@ class JoinSystem : SystemBase
         });
     }
 
-    private Entity CreatePlayer(Entity authority)
+    private Entity CreateLocalPlayer(Entity authority)
     {
-        var queryForPlayers = EntityManager.CreateEntityQuery(typeof(Player));
-        var playerCount = queryForPlayers.CalculateEntityCount();
-
         var playerPrefabEntity = PrefabHolder.Get().playerPrefabEntity;
         var newPlayerEntity = World.EntityManager.Instantiate(playerPrefabEntity);
 
@@ -80,40 +72,32 @@ class JoinSystem : SystemBase
 
         });
 
-        var isLocalPlayer = !authority.Equals(Entity.Null);
-
-        if(isLocalPlayer)
+        // This component makes us responsible for the simulation of the Entity.
+        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSimulateComponent
         {
-            // This component makes us responsible for the simulation of the Entity.
-            EntityManager.AddComponentData(newPlayerEntity, new CoherenceSimulateComponent
-            {
-                Authority = authority,
-            });
+            Authority = authority,
+        });
 
-            // This component makes the Entity disappear if we log out or disconnect.
-            EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
-            {
+        // This component makes the Entity disappear if we log out or disconnect.
+        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
+        {
 
-            });
+        });
 
-            // This component makes our keyboard input affect the Entity.
-            EntityManager.AddComponentData(newPlayerEntity, new Input
-            {
-                Value = new float2()
-            });
+        // This component makes our keyboard input affect the Entity.
+        EntityManager.AddComponentData(newPlayerEntity, new Input
+        {
+            Value = new float2()
+        });
 
-            // Spawn players in a circle around the center of the level.
-            var angle = math.PI * 0.25f * (float)playerCount;
-            var radius = 3.5f;
-            Debug.Log($"angle: {angle}, radius: {radius}, playerCount: {playerCount}");
-
-            EntityManager.AddComponentData(newPlayerEntity, new Translation
-            {
-                Value = new float3(math.cos(angle) * radius,
-                                   0.25f,
-                                   math.sin(angle) * radius)
-            });
-        }
+        // Set a random starting position.
+        var range = 4.0f;
+        EntityManager.AddComponentData(newPlayerEntity, new Translation
+        {
+            Value = new float3(UnityEngine.Random.Range(-range, range),
+                               0.25f,
+                               UnityEngine.Random.Range(-range, range))
+        });
 
         return newPlayerEntity;
     }
