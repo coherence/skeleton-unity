@@ -1,12 +1,11 @@
 using Unity.Entities;
 using Unity.Transforms;
 using Unity.Mathematics;
+using Unity.Rendering;
 using Coherence.Replication.Client.Unity.Ecs;
 using Coherence.Replication.Client.Connection;
 using Coherence.Generated.FirstProject;
 using Coherence.Sdk.Unity;
-using UnityEngine;
-using Unity.Rendering;
 
 [AlwaysUpdateSystem]
 class JoinSystem : SystemBase
@@ -24,11 +23,11 @@ class JoinSystem : SystemBase
     {
         // When we are connected we try to get hold of our LocalUser entity,
         // which allows us to create a WorldPositionQuery and Player.
-        if(coherenceRuntime.IsConnected && localUserAuthority.Equals(Entity.Null))
+        if (coherenceRuntime.IsConnected && localUserAuthority.Equals(Entity.Null))
         {
             var localUserQuery = EntityManager.CreateEntityQuery(typeof(LocalUser));
 
-            if(localUserQuery.CalculateEntityCount() > 0)
+            if (localUserQuery.CalculateEntityCount() > 0)
             {
                 localUserAuthority = localUserQuery.GetSingletonEntity();
                 CreateWorldPositionQuery(localUserAuthority);
