@@ -3,7 +3,6 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Coherence.Replication.Client.Unity.Ecs;
-//using Coherence.Replication.Client.Connection;
 using Coherence.Generated.FirstProject;
 using Coherence.Sdk.Unity;
 
