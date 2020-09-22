@@ -29,7 +29,7 @@ class JoinSystem : SystemBase
         {
             var otherPlayerPrefabEntity = PrefabHolder.Get().otherPlayerPrefabEntity;
             var newPlayerEntity = World.EntityManager.Instantiate(otherPlayerPrefabEntity);
-            EntityReplacer.ReplaceEntity(EntityManager, networkEntity, newPlayerEntity);
+            EntityReplacer.Replace(EntityManager, networkEntity, newPlayerEntity);
         }).WithStructuralChanges().WithoutBurst().Run();
     }
 

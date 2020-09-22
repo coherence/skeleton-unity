@@ -2,7 +2,7 @@
 // Generated file. DO NOT EDIT!
 // Generated from schema 'FirstProject' [0xCED29605]
 // File created by coherence-code-generator development
-// Generated at time 2020-09-22T15:07:01Z
+// Generated at time 2020-09-22T15:31:08Z
 // </auto-generated>
 
 
@@ -3044,7 +3044,7 @@ namespace Coherence.Generated.Internal.FirstProject
 	using UnityEngine;
 
 	public class EntityReplacer {
-		public static void ReplaceEntity(EntityManager entityManager, Entity networkEntity, Entity newEntity)
+		public static void Replace(EntityManager entityManager, Entity networkEntity, Entity newEntity)
 		{
 #if UNITY_EDITOR
 			entityManager.SetName(newEntity, $"{networkEntity} (remote)");
