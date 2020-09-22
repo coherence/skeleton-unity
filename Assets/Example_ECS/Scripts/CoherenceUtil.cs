@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class CoherenceUtil
 {
+    // TODO: Move this function to replication-client-unity or something like that?!
     public static void ReplaceEntity(EntityManager entityManager, Entity networkEntity, Entity newEntity)
     {
 #if UNITY_EDITOR
