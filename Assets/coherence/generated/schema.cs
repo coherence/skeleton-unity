@@ -2,7 +2,7 @@
 // Generated file. DO NOT EDIT!
 // Generated from schema 'FirstProject' [0xCED29605]
 // File created by coherence-code-generator development
-// Generated at time 2020-09-22T14:39:53Z
+// Generated at time 2020-09-22T15:07:01Z
 // </auto-generated>
 
 
@@ -3067,50 +3067,42 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		private static void CopyComponents(EntityManager entityManager, Entity source, Entity destination)
 		{
-			
-				
-				
-			
-				
-					if(entityManager.HasComponent<LocalUser>(source))
-					{
-						var data = entityManager.GetComponentData<LocalUser>(source);
-						entityManager.SetComponentData<LocalUser>(destination, data);
-					}
-				
-			
-				
-					if(entityManager.HasComponent<WorldPositionQuery>(source))
-					{
-						var data = entityManager.GetComponentData<WorldPositionQuery>(source);
-						entityManager.SetComponentData<WorldPositionQuery>(destination, data);
-					}
-				
-			
-				
-					if(entityManager.HasComponent<CoherenceSessionComponent>(source))
-					{
-						var data = entityManager.GetComponentData<CoherenceSessionComponent>(source);
-						entityManager.SetComponentData<CoherenceSessionComponent>(destination, data);
-					}
-				
-			
-				
-					if(entityManager.HasComponent<Player>(source))
-					{
-						var data = entityManager.GetComponentData<Player>(source);
-						entityManager.SetComponentData<Player>(destination, data);
-					}
-				
-			
-				
-					if(entityManager.HasComponent<Foo>(source))
-					{
-						var data = entityManager.GetComponentData<Foo>(source);
-						entityManager.SetComponentData<Foo>(destination, data);
-					}
-				
-			
+		
+		    // Translation is built in, will not copy it.
+		
+		
+		    // LocalUser has fields, will copy it.
+			if(entityManager.HasComponent<LocalUser>(source))
+			{
+				var data = entityManager.GetComponentData<LocalUser>(source);
+				entityManager.SetComponentData<LocalUser>(destination, data);
+			}
+		
+		
+		    // WorldPositionQuery has fields, will copy it.
+			if(entityManager.HasComponent<WorldPositionQuery>(source))
+			{
+				var data = entityManager.GetComponentData<WorldPositionQuery>(source);
+				entityManager.SetComponentData<WorldPositionQuery>(destination, data);
+			}
+		
+		
+		    // CoherenceSessionComponent has no fields, will just add it.
+			entityManager.AddComponentData<CoherenceSessionComponent>(destination, new CoherenceSessionComponent());
+		
+		
+		    // Player has no fields, will just add it.
+			entityManager.AddComponentData<Player>(destination, new Player());
+		
+		
+		    // Foo has fields, will copy it.
+			if(entityManager.HasComponent<Foo>(source))
+			{
+				var data = entityManager.GetComponentData<Foo>(source);
+				entityManager.SetComponentData<Foo>(destination, data);
+			}
+		
+		
 		}
 	}
 }
