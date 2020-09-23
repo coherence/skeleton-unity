@@ -2,7 +2,7 @@
 // Generated file. DO NOT EDIT!
 // Generated from schema 'FirstProject' [0xCED29605]
 // File created by coherence-code-generator development
-// Generated at time 2020-09-23T08:42:32Z
+// Generated at time 2020-09-23T09:23:20Z
 // </auto-generated>
 
 
@@ -3031,9 +3031,9 @@ namespace Coherence.Generated.FirstProject
 
 
 
-#region ReplaceEntity
+#region EntityReplacer
 // -----------------------------------
-//  ReplaceEntity.cs
+//  EntityReplacer.cs
 // -----------------------------------
 			
 namespace Coherence.Generated.Internal.FirstProject
@@ -3108,5 +3108,5 @@ namespace Coherence.Generated.Internal.FirstProject
 }
 
 
-// ------------------ end of ReplaceEntity.cs -----------------
+// ------------------ end of EntityReplacer.cs -----------------
 #endregion
