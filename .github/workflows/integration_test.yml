@@ -29,8 +29,6 @@ jobs:
         with:
           go-version: 1.13
 
-      - run: exit 1
-
       - name: Setup private access
         uses: coherence/action-go-mod-private@v1
         with:
@@ -73,11 +71,7 @@ jobs:
       - uses: technote-space/workflow-conclusion-action@v1
       - uses: Ilshidur/action-slack@2.0.2
         if: env.WORKFLOW_CONCLUSION == 'failure'
-        env:
-          SLACK_USERNAME: Build Failed
-          SLACK_CHANNEL: testing-stuff
-          SLACK_AVATAR: skull_and_crossbones
         with:
           args: |
-            Repo: ${{ github.repository }}
+            Repo: *${{ github.repository }}*
             Link: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
