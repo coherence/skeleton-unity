@@ -76,7 +76,8 @@ jobs:
         env:
           SLACK_USERNAME: Build Failed
           SLACK_CHANNEL: testing-stuff
+          SLACK_AVATAR: ":skull_and_crossbones:"
         with:
           args: |
-            Repo: *${{ github.repository }}*
+            Repo: ${{ github.repository }}
             Link: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
