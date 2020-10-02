@@ -74,8 +74,9 @@ jobs:
       - uses: Ilshidur/action-slack@2.0.2
         if: env.WORKFLOW_CONCLUSION == 'failure'
         env:
+          SLACK_USERNAME: Build Failed
           SLACK_CHANNEL: testing-stuff
         with:
           args: |
-            Build failed: ${{ github.repository }}
-            Link: https://github.com/${{ github.repository }}/actions/run/${{ github.run_id }}
+            Repo: *${{ github.repository }}*
+            Link: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
