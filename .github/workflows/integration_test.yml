@@ -76,7 +76,7 @@ jobs:
         env:
           SLACK_USERNAME: Build Failed
           SLACK_CHANNEL: testing-stuff
-          SLACK_AVATAR: ":skull_and_crossbones:"
+          SLACK_AVATAR: skull_and_crossbones
         with:
           args: |
             Repo: ${{ github.repository }}
