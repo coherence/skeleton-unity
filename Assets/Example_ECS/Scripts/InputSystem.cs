@@ -15,7 +15,7 @@ class InputSystem : SystemBase
 
         if (math.length(vec) > 0f)
         {
-            vec = math.normalize(vec);
+            vec = math.mul(float2x2.Rotate(math.PI * 0.25f), math.normalize(vec));
         }
 
         Entities.ForEach((ref Input input) =>
