@@ -3,3 +3,7 @@ name FirstProject
 namespace Coherence.Generated.FirstProject
 
 component Player
+
+command Doit
+  number Int
+  text String64

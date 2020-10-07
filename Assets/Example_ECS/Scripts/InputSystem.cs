@@ -1,3 +1,6 @@
+using Coherence;
+using Coherence.Generated.FirstProject;
+using Coherence.Replication.Client.Unity.Ecs;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,5 +25,23 @@ class InputSystem : SystemBase
         {
             input.Value = vec;
         }).ScheduleParallel();
+
+        // Sending commands
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
+        {
+            Entities
+                .WithNone<CoherenceSimulateComponent>()
+                .ForEach((Entity entity,
+                          in Player player) =>
+            {
+                var doitRequestBuffer = EntityManager.GetBuffer<DoitRequest>(entity);
+                doitRequestBuffer.Add(new DoitRequest {
+                        number = counter++,
+                        text = "Here's " + counter.ToString() + "!"
+                    });
+            }).WithoutBurst().Run();
+        }
     }
+
+    static int counter = 0;
 }
