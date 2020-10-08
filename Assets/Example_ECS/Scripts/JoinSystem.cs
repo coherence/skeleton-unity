@@ -31,6 +31,13 @@ class JoinSystem : SystemBase
             var newPlayerEntity = World.EntityManager.Instantiate(otherPlayerPrefabEntity);
             EntityReplacer.Replace(EntityManager, networkEntity, newPlayerEntity);
         }).WithStructuralChanges().WithoutBurst().Run();
+
+        if(UnityEngine.Time.frameCount % 60 == 0) {
+            Entities.ForEach((Entity entity, in Player player, in Attach attach) =>
+            {
+                UnityEngine.Debug.Log($"I'm player {entity} and my parent is {attach.parent}");
+            }).WithStructuralChanges().WithoutBurst().Run();
+        }
     }
 
     void CreateWorldPositionQuery()
@@ -50,6 +57,18 @@ class JoinSystem : SystemBase
 
     private Entity CreateLocalPlayer()
     {
+        // Create a "parent" Entity
+        var parent = EntityManager.CreateEntity();
+
+        EntityManager.AddComponentData(parent, new CoherenceSimulateComponent
+        {
+
+        });
+
+        UnityEngine.Debug.Log($"parent entity = {parent}");
+
+
+
         var playerPrefabEntity = PrefabHolder.Get().playerPrefabEntity;
         var newPlayerEntity = World.EntityManager.Instantiate(playerPrefabEntity);
 
@@ -84,6 +103,12 @@ class JoinSystem : SystemBase
             Value = new float3(UnityEngine.Random.Range(-range, range),
                                0.25f,
                                UnityEngine.Random.Range(-range, range))
+        });
+
+        // Add parent
+        EntityManager.AddComponentData(newPlayerEntity, new Attach
+        {
+            parent = parent
         });
 
         return newPlayerEntity;

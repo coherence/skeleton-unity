@@ -230,17 +230,6 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
-    "io.coherence.sdk.client.unity": {
-      "version": "2020.1.0-a42",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {
-        "com.unity.entities": "0.13.0-preview.24",
-        "com.unity.physics": "0.4.1-preview",
-        "com.unity.rendering.hybrid": "0.7.0-preview.24"
-      },
-      "url": "https://npm.fury.io/coherence"
-    },
     "nuget.mono-cecil": {
       "version": "0.1.5-preview",
       "depth": 1,

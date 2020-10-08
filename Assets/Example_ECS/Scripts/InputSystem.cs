@@ -22,5 +22,7 @@ class InputSystem : SystemBase
         {
             input.Value = vec;
         }).ScheduleParallel();
+
+
     }
 }
