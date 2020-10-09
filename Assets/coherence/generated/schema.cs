@@ -279,11 +279,18 @@ namespace Coherence.Generated.Internal.FirstProject
     using Unity.Transforms;
     using IOutBitStream = Piot.Brook.IOutBitStream;
     using global::Coherence.Generated.FirstProject;
+    using Coherence.Replication.Unity;
 
     public class SerializeCreateEntityRequest
     {
+        private MessageSerializers messageSerializers;
+
+        public SerializeCreateEntityRequest(UnityMapper mapper)
+        {
+            messageSerializers = new MessageSerializers(mapper);
+        }
         
-        public static void SerializeComponentsInMessageFormat(EntityManager entityManager,
+        public void SerializeComponentsInMessageFormat(EntityManager entityManager,
             Entity entity, uint[] foundComponentTypes, IOutBitStream bitStream, ILog log)
         {
             var protocolOutStream = new FieldStream.Serialize.Streams.OutBitStream(bitStream, log);
@@ -298,49 +305,49 @@ namespace Coherence.Generated.Internal.FirstProject
                     case TypeIds.InternalWorldPositionComponent:
 					{
 						var data = entityManager.GetComponentData<Translation>(entity);
-						MessageSerializers.WorldPositionComponent(protocolOutStream, data);
+						messageSerializers.WorldPositionComponent(protocolOutStream, data);
 						break;
 					}
 					
                     case TypeIds.InternalWorldOrientationComponent:
 					{
 						var data = entityManager.GetComponentData<Rotation>(entity);
-						MessageSerializers.WorldOrientationComponent(protocolOutStream, data);
+						messageSerializers.WorldOrientationComponent(protocolOutStream, data);
 						break;
 					}
 					
                     case TypeIds.InternalLocalUser:
 					{
 						var data = entityManager.GetComponentData<LocalUser>(entity);
-						MessageSerializers.LocalUser(protocolOutStream, data);
+						messageSerializers.LocalUser(protocolOutStream, data);
 						break;
 					}
 					
                     case TypeIds.InternalWorldPositionQuery:
 					{
 						var data = entityManager.GetComponentData<WorldPositionQuery>(entity);
-						MessageSerializers.WorldPositionQuery(protocolOutStream, data);
+						messageSerializers.WorldPositionQuery(protocolOutStream, data);
 						break;
 					}
 					
                     case TypeIds.InternalCoherenceSessionComponent:
 					{
 						var data = entityManager.GetComponentData<CoherenceSessionComponent>(entity);
-						MessageSerializers.CoherenceSessionComponent(protocolOutStream, data);
+						messageSerializers.CoherenceSessionComponent(protocolOutStream, data);
 						break;
 					}
 					
                     case TypeIds.InternalPlayer:
 					{
 						var data = entityManager.GetComponentData<Player>(entity);
-						MessageSerializers.Player(protocolOutStream, data);
+						messageSerializers.Player(protocolOutStream, data);
 						break;
 					}
 					
                     case TypeIds.InternalAttach:
 					{
 						var data = entityManager.GetComponentData<Attach>(entity);
-						MessageSerializers.Attach(protocolOutStream, data);
+						messageSerializers.Attach(protocolOutStream, data);
 						break;
 					}
 					
@@ -376,11 +383,19 @@ namespace Coherence.Generated.Internal.FirstProject
     using global::Coherence.Generated.FirstProject;
     using Piot.SimulationFrame;
     using Replication.Client.Unity.Ecs;
+    using Coherence.Replication.Unity;
 
     public class DeserializeComponentUpdateGenerated
     {
+        private UnityReaders unityReaders;
 
-        private static void DeserializeWorldPositionComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        public DeserializeComponentUpdateGenerated(UnityMapper mapper)
+        {
+            unityReaders = new UnityReaders(mapper);
+        }
+
+
+        private void DeserializeWorldPositionComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
             // If we own the entity, don't overwrite with downstream data from server
@@ -389,7 +404,7 @@ namespace Coherence.Generated.Internal.FirstProject
 	        {
 	            // Read and discard data (the stream must always be read) 
 	            var temp = new Translation();
-				UnityReaders.Read(ref temp, protocolStream);
+				unityReaders.Read(ref temp, protocolStream);
 				return;
             }
             
@@ -403,7 +418,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 			// Append buffer for components that use interpolation
 			var tempComponentData = new Translation();
-			UnityReaders.Read(ref tempComponentData, protocolStream);
+			unityReaders.Read(ref tempComponentData, protocolStream);
 			if (justCreated) // Hack
 			{
 				entityManager.SetComponentData(entity, tempComponentData);
@@ -413,7 +428,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		}
 
-        private static void DeserializeWorldOrientationComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeWorldOrientationComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
             // If we own the entity, don't overwrite with downstream data from server
@@ -422,7 +437,7 @@ namespace Coherence.Generated.Internal.FirstProject
 	        {
 	            // Read and discard data (the stream must always be read) 
 	            var temp = new Rotation();
-				UnityReaders.Read(ref temp, protocolStream);
+				unityReaders.Read(ref temp, protocolStream);
 				return;
             }
             
@@ -436,7 +451,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 			// Append buffer for components that use interpolation
 			var tempComponentData = new Rotation();
-			UnityReaders.Read(ref tempComponentData, protocolStream);
+			unityReaders.Read(ref tempComponentData, protocolStream);
 			if (justCreated) // Hack
 			{
 				entityManager.SetComponentData(entity, tempComponentData);
@@ -446,7 +461,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		}
 
-        private static void DeserializeLocalUser(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeLocalUser(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
             // If we own the entity, don't overwrite with downstream data from server
@@ -455,20 +470,20 @@ namespace Coherence.Generated.Internal.FirstProject
 	        {
 	            // Read and discard data (the stream must always be read) 
 	            var temp = new LocalUser();
-				UnityReaders.Read(ref temp, protocolStream);
+				unityReaders.Read(ref temp, protocolStream);
 				return;
             }
             
     
 			// Overwrite components that don't use interpolation
 			var componentData = entityManager.GetComponentData<LocalUser>(entity);
-			UnityReaders.Read(ref componentData, protocolStream);
+			unityReaders.Read(ref componentData, protocolStream);
 			entityManager.SetComponentData(entity, componentData);
     
 
 		}
 
-        private static void DeserializeWorldPositionQuery(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeWorldPositionQuery(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
             // If we own the entity, don't overwrite with downstream data from server
@@ -477,20 +492,20 @@ namespace Coherence.Generated.Internal.FirstProject
 	        {
 	            // Read and discard data (the stream must always be read) 
 	            var temp = new WorldPositionQuery();
-				UnityReaders.Read(ref temp, protocolStream);
+				unityReaders.Read(ref temp, protocolStream);
 				return;
             }
             
     
 			// Overwrite components that don't use interpolation
 			var componentData = entityManager.GetComponentData<WorldPositionQuery>(entity);
-			UnityReaders.Read(ref componentData, protocolStream);
+			unityReaders.Read(ref componentData, protocolStream);
 			entityManager.SetComponentData(entity, componentData);
     
 
 		}
 
-        private static void DeserializeCoherenceSessionComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeCoherenceSessionComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
 			// No need to read empty components, just ensure that it's there
@@ -501,7 +516,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		}
 
-        private static void DeserializePlayer(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializePlayer(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
 			// No need to read empty components, just ensure that it's there
@@ -512,7 +527,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		}
 
-        private static void DeserializeAttach(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeAttach(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
             // If we own the entity, don't overwrite with downstream data from server
@@ -521,14 +536,14 @@ namespace Coherence.Generated.Internal.FirstProject
 	        {
 	            // Read and discard data (the stream must always be read) 
 	            var temp = new Attach();
-				UnityReaders.Read(ref temp, protocolStream);
+				unityReaders.Read(ref temp, protocolStream);
 				return;
             }
             
     
 			// Overwrite components that don't use interpolation
 			var componentData = entityManager.GetComponentData<Attach>(entity);
-			UnityReaders.Read(ref componentData, protocolStream);
+			unityReaders.Read(ref componentData, protocolStream);
 			entityManager.SetComponentData(entity, componentData);
     
 
@@ -536,12 +551,12 @@ namespace Coherence.Generated.Internal.FirstProject
 
         
 
-        public static void ReadComponentDataUpdate(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, ILog log)
+        public void ReadComponentDataUpdate(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, ILog log)
         {
             ReadComponentDataUpdateEx(entityManager, entity, componentType, simulationFrame, bitStream, false, log);
 		}
 
-        public static void ReadComponentDataUpdateEx(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, bool justCreated, ILog log)
+        public void ReadComponentDataUpdateEx(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, bool justCreated, ILog log)
         {
             var componentOwnership = Deserializator.ReadComponentOwnership(bitStream, log); // Read bit from stream...
             componentOwnership = entityManager.HasComponent<CoherenceSimulateComponent>(entity); // Then overwrite it with entity ownership.
@@ -584,7 +599,7 @@ namespace Coherence.Generated.Internal.FirstProject
 			}
 		}
 		
-        public static void CreateIfNeededAndReadComponentDataUpdate(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, ILog log)
+        public void CreateIfNeededAndReadComponentDataUpdate(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, ILog log)
         {
 #region Commands
 
@@ -709,14 +724,21 @@ namespace Coherence.Generated.Internal.FirstProject
 
     public class ComponentDeserializeWrapper : ISchemaSpecificComponentDeserialize
     {
+        private DeserializeComponentUpdateGenerated deserializeComponentUpdateGenerated;
+
+        public ComponentDeserializeWrapper(UnityMapper mapper)
+        {
+            deserializeComponentUpdateGenerated = new DeserializeComponentUpdateGenerated(mapper);
+        }
+
         public void CreateIfNeededAndReadComponentDataUpdate(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, ILog log)
         {
-            DeserializeComponentUpdateGenerated.CreateIfNeededAndReadComponentDataUpdate(entityManager, entity, componentType, simulationFrame, bitStream, log);
+            deserializeComponentUpdateGenerated.CreateIfNeededAndReadComponentDataUpdate(entityManager, entity, componentType, simulationFrame, bitStream, log);
         }
 
         public void ReadComponentDataUpdate(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, ILog log)
         {
-            DeserializeComponentUpdateGenerated.ReadComponentDataUpdate(entityManager, entity, componentType, simulationFrame, bitStream, log);
+            deserializeComponentUpdateGenerated.ReadComponentDataUpdate(entityManager, entity, componentType, simulationFrame, bitStream, log);
         }
     }
 
@@ -738,54 +760,62 @@ namespace Coherence.Generated.Internal.FirstProject
     using Unity.Transforms;
     using global::Coherence.Generated.FirstProject;
     using Replication.Client.Unity.Ecs;
+    using Coherence.Replication.Unity;
 
     public class DeserializeComponentUpdateSkipGenerated
     {
+        private UnityReaders unityReaders;
+
+        public DeserializeComponentUpdateSkipGenerated(UnityMapper mapper)
+        {
+            unityReaders = new UnityReaders(mapper);
+        }
+
 		
-		private static void DeserializeWorldPositionComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeWorldPositionComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new Translation();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private static void DeserializeWorldOrientationComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeWorldOrientationComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new Rotation();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private static void DeserializeLocalUser(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeLocalUser(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new LocalUser();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private static void DeserializeWorldPositionQuery(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeWorldPositionQuery(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new WorldPositionQuery();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private static void DeserializeCoherenceSessionComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeCoherenceSessionComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new CoherenceSessionComponent();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private static void DeserializePlayer(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializePlayer(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new Player();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private static void DeserializeAttach(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeAttach(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new Attach();
-            UnityReaders.Read(ref ignored, protocolStream);
+            unityReaders.Read(ref ignored, protocolStream);
 		}
 		
  
-		public static void SkipComponentDataUpdate(uint componentType, Coherence.Replication.Protocol.Definition.IInBitStream inProtocolStream, ILog log)
+		public void SkipComponentDataUpdate(uint componentType, Coherence.Replication.Protocol.Definition.IInBitStream inProtocolStream, ILog log)
         {
 			switch (componentType)
             {
@@ -824,9 +854,16 @@ namespace Coherence.Generated.Internal.FirstProject
     
     public class DeserializeComponentsAndSkipWrapper : ISchemaSpecificComponentDeserializerAndSkip
     {
+        DeserializeComponentUpdateSkipGenerated deserializeComponentUpdateSkipGenerated;
+
+        public DeserializeComponentsAndSkipWrapper(UnityMapper mapper)
+        {
+            deserializeComponentUpdateSkipGenerated = new DeserializeComponentUpdateSkipGenerated(mapper);
+        }
+
         public void DeserializeAndSkipComponent(uint componentTypeId, Coherence.Replication.Protocol.Definition.IInBitStream protocolOutStream, ILog log)
         {
-            DeserializeComponentUpdateSkipGenerated.SkipComponentDataUpdate(componentTypeId, protocolOutStream, log);
+            deserializeComponentUpdateSkipGenerated.SkipComponentDataUpdate(componentTypeId, protocolOutStream, log);
         }
     }    
 }
@@ -871,8 +908,7 @@ namespace Coherence.Generated.Internal.FirstProject
         {
             Debug.Log($"created messageChannels");
             var netSys = World.GetOrCreateSystem<NetworkSystem>();
-            CoherenceToUnityConverters.networkSystem = netSys;
-            var wrapper = new SerializeComponentUpdatesWrapper();
+            var wrapper = new SerializeComponentUpdatesWrapper(netSys.Mapper);
             sender = new Sender(World, netSys.Connector, netSys.Mapper, wrapper, netSys.SentPacketsCache, netSys.Log);
             destroyedEntities = netSys.DestroyedEntities;
         }
@@ -1449,10 +1485,17 @@ namespace Coherence.Generated.Internal.FirstProject
 
     public class CreateEntityRequestSerializeWrapper : ISchemaSpecificSerializeComponentsInMessageFormat
     {
+        private SerializeCreateEntityRequest serializeCreateEntityRequest;
+
+        public CreateEntityRequestSerializeWrapper(UnityMapper mapper)
+        {
+            serializeCreateEntityRequest = new SerializeCreateEntityRequest(mapper);
+        }
+
         public void SerializeComponentsInMessageFormat(EntityManager entityManager, Entity entity, uint[] foundComponentTypes,
             IOutBitStream bitStream, ILog log)
         {
-            SerializeCreateEntityRequest.SerializeComponentsInMessageFormat(entityManager, entity, foundComponentTypes, bitStream, log);
+            serializeCreateEntityRequest.SerializeComponentsInMessageFormat(entityManager, entity, foundComponentTypes, bitStream, log);
         }
     }
 
@@ -1489,9 +1532,9 @@ namespace Coherence.Generated.Internal.FirstProject
         private void BootUp()
         {
 	        simGroup = World.GetExistingSystem<CoherenceSimulationSystemGroup>();
-            var skipper = new DeserializeComponentsAndSkipWrapper();
-            var deserializeComponents = new ComponentDeserializeWrapper();
             var netSys = World.GetOrCreateSystem<NetworkSystem>();
+            var deserializeComponents = new ComponentDeserializeWrapper(netSys.Mapper);
+            var skipper = new DeserializeComponentsAndSkipWrapper(netSys.Mapper);
             var commandPerform = new PerformCommands();
             var receiveUpdate = new ReceiveUpdate(deserializeComponents, skipper, netSys.Mapper, netSys.DestroyedEntities, netSys.Log);
             receiver = new Receiver(World, netSys.Mapper, netSys.Connector, receiveUpdate, commandPerform, netSys.SentPacketsCache, netSys.Log);
@@ -1679,16 +1722,24 @@ namespace Coherence.Generated.Internal.FirstProject
 	using global::Coherence.Generated.FirstProject;
 	using Coherence.Replication.Protocol.Definition;
 	using Replication.Client.Unity.Ecs;
+    using Coherence.Replication.Unity;
 
-    public static class SerializeComponentUpdatesGenerated
+    public class SerializeComponentUpdatesGenerated
     {
+         private UnityWriters unityWriters;
 
-        private static void SerializeWorldPositionComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+         public SerializeComponentUpdatesGenerated(UnityMapper mapper)
+         {
+             unityWriters = new UnityWriters(mapper);
+         }
+
+
+        private void SerializeWorldPositionComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Write component changes to output stream
             var componentData = EntityManager.GetComponentData<Translation>(entity);
-            UnityWriters.Write(componentData, mask, protocolOutStream);
+            unityWriters.Write(componentData, mask, protocolOutStream);
 
             // Reset accumulated priority so the same component is not sent again next frame
             var syncData = EntityManager.GetComponentData<WorldPositionComponent_Sync>(entity);
@@ -1703,12 +1754,12 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private static void SerializeWorldOrientationComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializeWorldOrientationComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Write component changes to output stream
             var componentData = EntityManager.GetComponentData<Rotation>(entity);
-            UnityWriters.Write(componentData, mask, protocolOutStream);
+            unityWriters.Write(componentData, mask, protocolOutStream);
 
             // Reset accumulated priority so the same component is not sent again next frame
             var syncData = EntityManager.GetComponentData<WorldOrientationComponent_Sync>(entity);
@@ -1723,12 +1774,12 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private static void SerializeLocalUser(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializeLocalUser(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Write component changes to output stream
             var componentData = EntityManager.GetComponentData<LocalUser>(entity);
-            UnityWriters.Write(componentData, mask, protocolOutStream);
+            unityWriters.Write(componentData, mask, protocolOutStream);
 
             // Reset accumulated priority so the same component is not sent again next frame
             var syncData = EntityManager.GetComponentData<LocalUser_Sync>(entity);
@@ -1743,12 +1794,12 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private static void SerializeWorldPositionQuery(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializeWorldPositionQuery(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Write component changes to output stream
             var componentData = EntityManager.GetComponentData<WorldPositionQuery>(entity);
-            UnityWriters.Write(componentData, mask, protocolOutStream);
+            unityWriters.Write(componentData, mask, protocolOutStream);
 
             // Reset accumulated priority so the same component is not sent again next frame
             var syncData = EntityManager.GetComponentData<WorldPositionQuery_Sync>(entity);
@@ -1763,7 +1814,7 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private static void SerializeCoherenceSessionComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializeCoherenceSessionComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Reset accumulated priority so the same component is not sent again next frame
@@ -1777,7 +1828,7 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private static void SerializePlayer(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializePlayer(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Reset accumulated priority so the same component is not sent again next frame
@@ -1791,12 +1842,12 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private static void SerializeAttach(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializeAttach(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Write component changes to output stream
             var componentData = EntityManager.GetComponentData<Attach>(entity);
-            UnityWriters.Write(componentData, mask, protocolOutStream);
+            unityWriters.Write(componentData, mask, protocolOutStream);
 
             // Reset accumulated priority so the same component is not sent again next frame
             var syncData = EntityManager.GetComponentData<Attach_Sync>(entity);
@@ -1812,7 +1863,7 @@ namespace Coherence.Generated.Internal.FirstProject
         
 
     
-        public static void SerializeComponent(EntityManager entityManager, Entity unityEntity, uint componentType, uint fieldMask, IOutBitStream protocolOutStream)
+        public void SerializeComponent(EntityManager entityManager, Entity unityEntity, uint componentType, uint fieldMask, IOutBitStream protocolOutStream)
         {
             switch (componentType)
             {
@@ -1851,7 +1902,7 @@ namespace Coherence.Generated.Internal.FirstProject
         }
     
         
-        public static void UpdateDestructState(EntityManager entityManager, Entity unityEntity, uint componentTypeId)
+        public void UpdateDestructState(EntityManager entityManager, Entity unityEntity, uint componentTypeId)
         {
             switch (componentTypeId)
             {
@@ -1921,14 +1972,21 @@ namespace Coherence.Generated.Internal.FirstProject
     
     class SerializeComponentUpdatesWrapper : ISchemaSpecificComponentSerializer
     {
+        private SerializeComponentUpdatesGenerated serializeComponentUpdatesGenerated;
+
+        public SerializeComponentUpdatesWrapper(UnityMapper mapper)
+        {
+            serializeComponentUpdatesGenerated = new SerializeComponentUpdatesGenerated(mapper);
+        }
+
     	public void SerializeComponent(EntityManager entityManager, Entity unityEntity, uint ComponentTypeId, uint fieldMask, IOutBitStream protocolOutStream)
     	{
-    		SerializeComponentUpdatesGenerated.SerializeComponent(entityManager, unityEntity, ComponentTypeId, fieldMask, protocolOutStream);
+    		serializeComponentUpdatesGenerated.SerializeComponent(entityManager, unityEntity, ComponentTypeId, fieldMask, protocolOutStream);
     	}
     	
     	public void UpdateDestructState(EntityManager entityManager, Entity unityEntity, uint componentTypeId)
     	{
-            SerializeComponentUpdatesGenerated.UpdateDestructState(entityManager, unityEntity, componentTypeId);
+            serializeComponentUpdatesGenerated.UpdateDestructState(entityManager, unityEntity, componentTypeId);
         }
     }
 
@@ -1953,31 +2011,37 @@ namespace Coherence.Generated.Internal.FirstProject
 	using global::Coherence.Generated.FirstProject;
 
 
-public static class UnityReaders
+public class UnityReaders
 {
+    private CoherenceToUnityConverters coherenceToUnityConverters;
 
-	public static uint Read(ref Translation data, IInBitStream bitstream)
+    public UnityReaders(UnityMapper mapper)
+    {
+        coherenceToUnityConverters = new CoherenceToUnityConverters(mapper);
+    }
+
+	public uint Read(ref Translation data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
 		if (bitstream.ReadMask()) 
 		{
 			var coherenceField = bitstream.ReadVector3f(24, 2400);
-				 data = CoherenceToUnityConverters.ToUnityTranslation(coherenceField);
+				 data = coherenceToUnityConverters.ToUnityTranslation(coherenceField);
 			propertyMask |= 0b00000000000000000000000000000001;
 		}
    
 		return propertyMask;
 	}
 
-	public static uint Read(ref Rotation data, IInBitStream bitstream)
+	public uint Read(ref Rotation data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
 		if (bitstream.ReadMask()) 
 		{
 			var coherenceField = bitstream.ReadUnitRotation();
-				 data = CoherenceToUnityConverters.ToUnityRotation(coherenceField);
+				 data = coherenceToUnityConverters.ToUnityRotation(coherenceField);
 			propertyMask |= 0b00000000000000000000000000000001;
 		}
    
@@ -1992,7 +2056,7 @@ public static class UnityReaders
 	
 	
 	
-	public static uint Read(ref LocalUser data, IInBitStream bitstream)
+	public uint Read(ref LocalUser data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
@@ -2009,20 +2073,20 @@ public static class UnityReaders
 	
 	
 	
-	public static uint Read(ref WorldPositionQuery data, IInBitStream bitstream)
+	public uint Read(ref WorldPositionQuery data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
             if (bitstream.ReadMask()) 
 		{
 			var coherenceField = bitstream.ReadVector3f(24, 2400);
-			     data.position = CoherenceToUnityConverters.ToUnityfloat3(coherenceField);
+			     data.position = coherenceToUnityConverters.ToUnityfloat3(coherenceField);
 			propertyMask |= 0b00000000000000000000000000000001;
 		}
             if (bitstream.ReadMask()) 
 		{
 			var coherenceField = bitstream.ReadFixedPoint(24, 40000);
-			     data.radius = CoherenceToUnityConverters.ToUnityfloat(coherenceField);
+			     data.radius = coherenceToUnityConverters.ToUnityfloat(coherenceField);
 			propertyMask |= 0b00000000000000000000000000000010;
 		}
        
@@ -2032,7 +2096,7 @@ public static class UnityReaders
 	
 	
 	
-	public static uint Read(ref CoherenceSessionComponent data, IInBitStream bitstream)
+	public uint Read(ref CoherenceSessionComponent data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
@@ -2043,7 +2107,7 @@ public static class UnityReaders
 	
 	
 	
-	public static uint Read(ref Player data, IInBitStream bitstream)
+	public uint Read(ref Player data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
@@ -2054,14 +2118,14 @@ public static class UnityReaders
 	
 	
 	
-	public static uint Read(ref Attach data, IInBitStream bitstream)
+	public uint Read(ref Attach data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
             if (bitstream.ReadMask()) 
 		{
 			var coherenceField = bitstream.ReadEntity();
-			     data.parent = CoherenceToUnityConverters.ToUnityEntity(coherenceField);
+			     data.parent = coherenceToUnityConverters.ToUnityEntity(coherenceField);
 			propertyMask |= 0b00000000000000000000000000000001;
 		}
        
@@ -2091,15 +2155,22 @@ namespace Coherence.Generated.Internal.FirstProject
 	using Unity.Transforms;
 
 
-	public static class UnityWriters
+	public class UnityWriters
 	{
-		public static void Write(in Translation data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+        private CoherenceToUnityConverters coherenceToUnityConverters;
+
+        public UnityWriters(UnityMapper mapper)
+        {
+            coherenceToUnityConverters = new CoherenceToUnityConverters(mapper);
+        }
+
+		public void Write(in Translation data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 		{
 
 			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
 			{
 				
-					var v = CoherenceToUnityConverters.FromUnityTranslation(data);
+					var v = coherenceToUnityConverters.FromUnityTranslation(data);
 					bitstream.WriteVector3f(v, 24, 2400);
 				
 			}
@@ -2107,13 +2178,13 @@ namespace Coherence.Generated.Internal.FirstProject
 
 	 }
 
-		public static void Write(in Rotation data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		public void Write(in Rotation data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 		{
 
 			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
 			{
 				
-					var q = CoherenceToUnityConverters.FromUnityRotation(data);
+					var q = coherenceToUnityConverters.FromUnityRotation(data);
 					bitstream.WriteUnitRotation(q);
 				
 			}
@@ -2130,7 +2201,7 @@ namespace Coherence.Generated.Internal.FirstProject
 		
 		
 		
-			public static void Write(in LocalUser data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+			public void Write(in LocalUser data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 			{
 	
 				if (bitstream.WriteMask((propertyMask & 0x01) != 0))
@@ -2147,13 +2218,13 @@ namespace Coherence.Generated.Internal.FirstProject
 		
 		
 		
-			public static void Write(in WorldPositionQuery data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+			public void Write(in WorldPositionQuery data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 			{
 	
 				if (bitstream.WriteMask((propertyMask & 0x01) != 0))
 				{
 					
-						var v = CoherenceToUnityConverters.FromUnityfloat3(data.position);
+						var v = coherenceToUnityConverters.FromUnityfloat3(data.position);
 						bitstream.WriteVector3f(v, 24, 2400);
 					
 				}
@@ -2163,7 +2234,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				if (bitstream.WriteMask((propertyMask & 0x01) != 0))
 				{
 					
-						var v = CoherenceToUnityConverters.FromUnityfloat(data.radius);
+						var v = coherenceToUnityConverters.FromUnityfloat(data.radius);
 						bitstream.WriteFixedPoint(v, 24, 40000);
 					
 				}
@@ -2175,7 +2246,7 @@ namespace Coherence.Generated.Internal.FirstProject
 		
 		
 		
-			public static void Write(in CoherenceSessionComponent data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+			public void Write(in CoherenceSessionComponent data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 			{
 	     }
 
@@ -2183,7 +2254,7 @@ namespace Coherence.Generated.Internal.FirstProject
 		
 		
 		
-			public static void Write(in Player data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+			public void Write(in Player data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 			{
 	     }
 
@@ -2191,13 +2262,13 @@ namespace Coherence.Generated.Internal.FirstProject
 		
 		
 		
-			public static void Write(in Attach data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+			public void Write(in Attach data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 			{
 	
 				if (bitstream.WriteMask((propertyMask & 0x01) != 0))
 				{
 					
-						var v = CoherenceToUnityConverters.FromUnityEntity(data.parent);
+						var v = coherenceToUnityConverters.FromUnityEntity(data.parent);
 						bitstream.WriteEntity(v);
 					
 				}
@@ -2228,17 +2299,24 @@ namespace Coherence.Generated.Internal.FirstProject
 	using Replication.Unity;
 
 
-public static class MessageSerializers
+public class MessageSerializers
 {
-	public static void WorldPositionComponent(IOutBitStream bitstream, Translation data)
+    private CoherenceToUnityConverters coherenceToUnityConverters;
+
+    public MessageSerializers(UnityMapper mapper)
+    {
+        coherenceToUnityConverters = new CoherenceToUnityConverters(mapper);
+    }
+
+	public void WorldPositionComponent(IOutBitStream bitstream, Translation data)
 	{
-		var internalData = CoherenceToUnityConverters.FromUnityTranslation(data);
+		var internalData = coherenceToUnityConverters.FromUnityTranslation(data);
 		bitstream.WriteVector3f(internalData, 24, 2400);
 	}
 
-	public static void WorldOrientationComponent(IOutBitStream bitstream, Rotation data)
+	public void WorldOrientationComponent(IOutBitStream bitstream, Rotation data)
 	{
-		var internalData = CoherenceToUnityConverters.FromUnityRotation(data);
+		var internalData = coherenceToUnityConverters.FromUnityRotation(data);
 		bitstream.WriteUnitRotation(internalData);
 	}
 
@@ -2250,7 +2328,7 @@ public static class MessageSerializers
 
 
 
-	public static void LocalUser(IOutBitStream bitstream, LocalUser data)
+	public void LocalUser(IOutBitStream bitstream, LocalUser data)
 	{
 
 			
@@ -2261,16 +2339,16 @@ public static class MessageSerializers
 
 
 
-	public static void WorldPositionQuery(IOutBitStream bitstream, WorldPositionQuery data)
+	public void WorldPositionQuery(IOutBitStream bitstream, WorldPositionQuery data)
 	{
 
 			
-				var converted_position = CoherenceToUnityConverters.FromUnityfloat3(data.position);
+				var converted_position = coherenceToUnityConverters.FromUnityfloat3(data.position);
 				bitstream.WriteVector3f(converted_position, 24, 2400);
 			
 
 			
-				var converted_radius = CoherenceToUnityConverters.FromUnityfloat(data.radius);
+				var converted_radius = coherenceToUnityConverters.FromUnityfloat(data.radius);
 				bitstream.WriteFixedPoint(converted_radius, 24, 40000);
 			
 
@@ -2278,25 +2356,25 @@ public static class MessageSerializers
 
 
 
-	public static void CoherenceSessionComponent(IOutBitStream bitstream, CoherenceSessionComponent data)
+	public void CoherenceSessionComponent(IOutBitStream bitstream, CoherenceSessionComponent data)
 	{
 
 	}
 
 
 
-	public static void Player(IOutBitStream bitstream, Player data)
+	public void Player(IOutBitStream bitstream, Player data)
 	{
 
 	}
 
 
 
-	public static void Attach(IOutBitStream bitstream, Attach data)
+	public void Attach(IOutBitStream bitstream, Attach data)
 	{
 
 			
-				var converted_parent = CoherenceToUnityConverters.FromUnityEntity(data.parent);
+				var converted_parent = coherenceToUnityConverters.FromUnityEntity(data.parent);
 				bitstream.WriteEntity(converted_parent);
 			
 
@@ -2330,12 +2408,19 @@ namespace Coherence.Generated.Internal.FirstProject
 	using Replication.Unity;
 
 
-public static class MessageDeserializers
+public class MessageDeserializers
 {
-	public static void WorldPositionComponent(IInBitStream bitstream, ref Translation data)
+    private CoherenceToUnityConverters coherenceToUnityConverters;
+
+    public MessageDeserializers(UnityMapper mapper)
+    {
+        coherenceToUnityConverters = new CoherenceToUnityConverters(mapper);
+    }
+
+	public void WorldPositionComponent(IInBitStream bitstream, ref Translation data)
 	{
 		var coherenceVector = bitstream.ReadVector3f(24, 2400);
-		data = CoherenceToUnityConverters.ToUnityTranslation(coherenceVector);
+		data = coherenceToUnityConverters.ToUnityTranslation(coherenceVector);
 	}
 
 
@@ -2347,7 +2432,7 @@ public static class MessageDeserializers
 
 
 
-	public static void LocalUser(IInBitStream bitstream, ref LocalUser data)
+	public void LocalUser(IInBitStream bitstream, ref LocalUser data)
 	{
 
 			
@@ -2358,43 +2443,43 @@ public static class MessageDeserializers
 
 
 
-	public static void WorldPositionQuery(IInBitStream bitstream, ref WorldPositionQuery data)
+	public void WorldPositionQuery(IInBitStream bitstream, ref WorldPositionQuery data)
 	{
 
 			
 				var position = bitstream.ReadVector3f(24, 2400);
-				data.position = CoherenceToUnityConverters.ToUnityfloat3(position);
+				data.position = coherenceToUnityConverters.ToUnityfloat3(position);
 			
 
 			
 				var radius = bitstream.ReadFixedPoint(24, 40000);
-				data.radius = CoherenceToUnityConverters.ToUnityfloat(radius);
+				data.radius = coherenceToUnityConverters.ToUnityfloat(radius);
 			
      
 	}
 
 
 
-	public static void CoherenceSessionComponent(IInBitStream bitstream, ref CoherenceSessionComponent data)
+	public void CoherenceSessionComponent(IInBitStream bitstream, ref CoherenceSessionComponent data)
 	{
      
 	}
 
 
 
-	public static void Player(IInBitStream bitstream, ref Player data)
+	public void Player(IInBitStream bitstream, ref Player data)
 	{
      
 	}
 
 
 
-	public static void Attach(IInBitStream bitstream, ref Attach data)
+	public void Attach(IInBitStream bitstream, ref Attach data)
 	{
 
 			
 				var parent = bitstream.ReadEntity();
-				data.parent = CoherenceToUnityConverters.ToUnityEntity(parent);
+				data.parent = coherenceToUnityConverters.ToUnityEntity(parent);
 			
      
 	}
