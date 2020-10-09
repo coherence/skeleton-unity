@@ -2862,7 +2862,7 @@ namespace Coherence.Generated.Internal.FirstProject
 			return entity;
 		}
 
-		public void UpdateResendMask(EntityManager entityManager, Coherence.Ecs.EntityId entityId, uint componentTypeId, uint fieldMask)
+		public void UpdateResendMask(EntityManager entityManager, Coherence.Ecs.SerializeEntityID entityId, uint componentTypeId, uint fieldMask)
 		{
 			var entity = mapper.ToUnityEntity(entityId);
 
@@ -2989,7 +2989,7 @@ namespace Coherence.Generated.Internal.FirstProject
 			}
 		}
 
-		public void UpdateHasReceivedConstructor(EntityManager entityManager, Coherence.Ecs.EntityId entityId, uint componentTypeId)
+		public void UpdateHasReceivedConstructor(EntityManager entityManager, Coherence.Ecs.SerializeEntityID entityId, uint componentTypeId)
 		{
 			var entity = mapper.ToUnityEntity(entityId, false);
 
@@ -3138,7 +3138,7 @@ namespace Coherence.Generated.Internal.FirstProject
 			}
 		}
 
-		public void UpdateResendDestroyed(EntityManager entityManager, EntityId entityId, AbsoluteSimulationFrame simulationFrame)
+		public void UpdateResendDestroyed(EntityManager entityManager, Coherence.Ecs.SerializeEntityID entityId, AbsoluteSimulationFrame simulationFrame)
 		{
 			var entity = mapper.ToUnityEntity(entityId, false);
 			if (entity == default)
