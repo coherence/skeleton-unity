@@ -55,14 +55,27 @@ class JoinSystem : SystemBase
         });
     }
 
+    public static Entity parent;
+
     private Entity CreateLocalPlayer()
     {
         // Create a "parent" Entity
-        var parent = EntityManager.CreateEntity();
+        parent = EntityManager.CreateEntity();
 
         EntityManager.AddComponentData(parent, new CoherenceSimulateComponent
         {
 
+        });
+
+        EntityManager.AddComponentData(parent, new CoherenceSessionComponent
+        {
+
+        });
+
+        // Making the parent be part of the query, so that it's transfered to the other client
+        EntityManager.AddComponentData(parent, new Translation
+        {
+            Value = new float3(0, 0, 0)
         });
 
         UnityEngine.Debug.Log($"parent entity = {parent}");

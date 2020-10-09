@@ -1,3 +1,5 @@
+using Coherence.Generated.FirstProject;
+using Coherence.Replication.Client.Unity.Ecs;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -23,6 +25,24 @@ class InputSystem : SystemBase
             input.Value = vec;
         }).ScheduleParallel();
 
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Q))
+        {
+            Entities
+                .ForEach((Entity entity,
+                          ref Attach attach, in Player player, in CoherenceSimulateComponent csc) =>
+            {
+                attach.parent = Entity.Null;
+            }).WithoutBurst().Run();
+        }
 
+        if (UnityEngine.Input.GetKeyDown(KeyCode.W))
+        {
+            Entities
+                .ForEach((Entity entity,
+                          ref Attach attach, in Player player, in CoherenceSimulateComponent csc) =>
+            {
+                attach.parent = JoinSystem.parent;
+            }).WithoutBurst().Run();
+        }
     }
 }
