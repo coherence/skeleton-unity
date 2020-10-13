@@ -1535,7 +1535,7 @@ namespace Coherence.Generated.Internal.FirstProject
             var netSys = World.GetOrCreateSystem<NetworkSystem>();
             var deserializeComponents = new ComponentDeserializeWrapper(netSys.Mapper);
             var skipper = new DeserializeComponentsAndSkipWrapper(netSys.Mapper);
-            var commandPerform = new PerformCommands();
+            var commandPerform = new PerformCommands(netSys.Mapper);
             var receiveUpdate = new ReceiveUpdate(deserializeComponents, skipper, netSys.Mapper, netSys.DestroyedEntities, netSys.Log);
             receiver = new Receiver(World, netSys.Mapper, netSys.Connector, receiveUpdate, commandPerform, netSys.SentPacketsCache, netSys.Log);
         }
@@ -2506,10 +2506,17 @@ namespace Coherence.Generated.Internal.FirstProject
 	using Piot.Log;
 	using Unity.Entities;
 	using Replication.Client.Unity.Ecs;
-
+	using Coherence.Replication.Unity;
 
 	public class PerformCommands : IPerformCommand
 	{
+        private MessageDeserializers messageDeserializers;
+
+         public PerformCommands(UnityMapper mapper)
+         {
+             messageDeserializers = new MessageDeserializers(mapper);
+         }
+
 		public void PerformCommand(EntityManager mgr, Entity entity, uint commandTypeID, Coherence.Replication.Protocol.Definition.IInBitStream bitStream, ILog log)
 		{
 
@@ -2651,6 +2658,12 @@ namespace Coherence.Generated.Internal.FirstProject
     public class DetectCommandsSentSystem : SystemBase
     {
 	    private Sender cachedSender;
+		private MessageSerializers messageSerializers;
+
+		public DetectCommandsSentSystem(UnityMapper mapper)
+		{
+			messageSerializers = new MessageSerializers(mapper);
+		}
 
 	    protected override void OnUpdate()
 	    {
