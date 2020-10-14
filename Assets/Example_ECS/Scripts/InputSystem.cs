@@ -29,6 +29,7 @@ class InputSystem : SystemBase
         // Sending commands
         if (UnityEngine.Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("Sending long text");
             Entities
                 .WithNone<CoherenceSimulateComponent>()
                 .ForEach((Entity entity,
@@ -38,6 +39,22 @@ class InputSystem : SystemBase
                 doitRequestBuffer.Add(new DoitRequest {
                         number = counter++,
                         text = "Here's " + counter.ToString() + "!"
+                    });
+            }).WithoutBurst().Run();
+        }
+
+        if (UnityEngine.Input.GetKeyDown(KeyCode.X))
+        {
+            Debug.Log("Sending short text");
+            Entities
+                .WithNone<CoherenceSimulateComponent>()
+                .ForEach((Entity entity,
+                          in Player player) =>
+            {
+                var doitRequestBuffer = EntityManager.GetBuffer<DoitRequest>(entity);
+                doitRequestBuffer.Add(new DoitRequest {
+                        number = counter++,
+                        text = "x"
                     });
             }).WithoutBurst().Run();
         }
