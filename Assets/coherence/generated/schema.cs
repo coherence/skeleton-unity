@@ -902,8 +902,6 @@ namespace Coherence.Generated.Internal.FirstProject
         private NativeHashMap<Entity, DetectedEntityDeletion> destroyedEntities;
 		public Sender Sender => sender;
 
-		private const int hackMaxKeysCount = 20;	// Max component changes to send per frame
-
         void BootUp()
         {
             Debug.Log($"created messageChannels");
@@ -1441,21 +1439,17 @@ namespace Coherence.Generated.Internal.FirstProject
 
         	Dependency.Complete();
 
-			var changesToSend = GetPrioritizedChanges(componentChanges, hackMaxKeysCount);
+			var changesToSend = GetPrioritizedChanges(componentChanges);
 	
 			var partsWorld = CreatePartsWorld.ComponentChangesToPartsWorld(destroyedEntities, changesToSend.ToArray(), sender.Mapper);
 
-			if (!partsWorld.IsEmpty)
-			{
-			}
-	
 			componentChanges.Clear();
 			sender.Send(partsWorld);
 
 			componentChanges.Dispose();
         }
 
-        private static List<ComponentChange> GetPrioritizedChanges(NativeMultiHashMap<uint, ComponentChange> componentChanges, int maxChanges)
+        private static List<ComponentChange> GetPrioritizedChanges(NativeMultiHashMap<uint, ComponentChange> componentChanges)
         {
 	        var componentChangesList = new List<ComponentChange>();
 		
@@ -1472,10 +1466,6 @@ namespace Coherence.Generated.Internal.FirstProject
 		        foreach (var change in changes)
 		        {
 			        componentChangesList.Add(change);
-			        if (componentChangesList.Count > maxChanges)
-			        {
-				        return componentChangesList;
-			        }
 		        }
 	        }
 
@@ -2850,7 +2840,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		public void PerformUpdate(EntityManager entityManager, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream)
 		{
-			var deserializeEntity = new Deserializator(log);
+			var deserializeEntity = new Deserializator();
 
 			while (deserializeEntity.ReadEntity(bitStream, out var entityWithMeta, log))
 			{
