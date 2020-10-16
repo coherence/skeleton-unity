@@ -3275,6 +3275,19 @@ namespace Coherence.Generated.FirstProject
 			entityManager.AddComponentData<Player>(destination, new Player());
 		
 		
+
+        // Command buffers
+        
+            if (entityManager.HasComponent<Doit>(source) &&
+                !entityManager.HasComponent<Doit>(destination)) {
+                entityManager.AddBuffer<Doit>(destination);
+            }
+            if (entityManager.HasComponent<DoitRequest>(source) &&
+                !entityManager.HasComponent<DoitRequest>(destination)) {
+                entityManager.AddBuffer<DoitRequest>(destination);
+            }
+        
+
 		}
 	}
 }

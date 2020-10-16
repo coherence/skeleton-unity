@@ -35,10 +35,12 @@ class InputSystem : SystemBase
                 .ForEach((Entity entity,
                           in Player player) =>
             {
+                UnityEngine.Debug.Log($"Adding command to: {entity}");
+
                 var doitRequestBuffer = EntityManager.GetBuffer<DoitRequest>(entity);
                 doitRequestBuffer.Add(new DoitRequest {
                         number = counter++,
-                        text = "Here's " + counter.ToString() + "!"
+                        text = "Håre's π " + counter.ToString() + "!"
                     });
             }).WithStructuralChanges().WithoutBurst().Run();
         }
