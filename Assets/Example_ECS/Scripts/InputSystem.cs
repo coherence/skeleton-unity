@@ -40,7 +40,7 @@ class InputSystem : SystemBase
                         number = counter++,
                         text = "Here's " + counter.ToString() + "!"
                     });
-            }).WithoutBurst().Run();
+            }).WithStructuralChanges().WithoutBurst().Run();
         }
 
         if (UnityEngine.Input.GetKeyDown(KeyCode.X))
@@ -56,7 +56,7 @@ class InputSystem : SystemBase
                         number = counter++,
                         text = "x"
                     });
-            }).WithoutBurst().Run();
+            }).WithStructuralChanges().WithoutBurst().Run();
         }
     }
 
