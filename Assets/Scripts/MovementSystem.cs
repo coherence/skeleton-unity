@@ -5,18 +5,19 @@ using Unity.Transforms;
 [AlwaysUpdateSystem]
 class MovementSystem : SystemBase
 {
-    const float speed = 5.0f;
-
     protected override void OnUpdate()
     {
         var dt = Time.DeltaTime;
 
-        Entities.ForEach((ref Translation translation, in Input input) =>
+        Entities.ForEach((ref Translation translation,
+                          ref Rotation rotation,
+                          in Input input) =>
         {
-            var movement = new float3(input.Value.x * speed * dt,
-                                      0f,
-                                      input.Value.y * speed * dt);
-            translation.Value = translation.Value + movement;
+            var newRotation = math.mul(quaternion.RotateY(input.RotationSpeed * dt), rotation.Value);
+            rotation.Value = newRotation;
+
+            var movementVector = math.forward(newRotation) * input.ForwardSpeed * dt;
+            translation.Value += movementVector;
         }).ScheduleParallel();
     }
 }

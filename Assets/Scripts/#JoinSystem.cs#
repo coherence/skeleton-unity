@@ -25,18 +25,12 @@ class JoinSystem : SystemBase
         }).WithStructuralChanges().WithoutBurst().Run();
 
         // Detect remotely simulated Player entities and instantiate a proper Prefab for them.
+
         Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity, in Player player) =>
         {
             var otherPlayerPrefabEntity = PrefabHolder.Get().otherPlayerPrefabEntity;
             var newPlayerEntity = World.EntityManager.Instantiate(otherPlayerPrefabEntity);
             EntityReplacer.Replace(EntityManager, networkEntity, newPlayerEntity);
-        }).WithStructuralChanges().WithoutBurst().Run();
-
-        Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity, in Shot shot) =>
-        {
-            var shotPrefabEntity = PrefabHolder.Get().shotPrefabEntity;
-            var newShotEntity = World.EntityManager.Instantiate(shotPrefabEntity);
-            EntityReplacer.Replace(EntityManager, networkEntity, newShotEntity);
         }).WithStructuralChanges().WithoutBurst().Run();
     }
 

@@ -3,5 +3,7 @@ using Unity.Mathematics;
 
 public struct Input : IComponentData
 {
-    public float2 Value;
+    public float ForwardSpeed;
+    public float RotationSpeed;
+    public bool Shoot;
 }

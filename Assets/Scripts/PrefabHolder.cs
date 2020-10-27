@@ -13,16 +13,21 @@ public class PrefabHolder : MonoBehaviour, IDeclareReferencedPrefabs, IConvertGa
     public GameObject otherPlayerPrefab;
     public Entity otherPlayerPrefabEntity;
 
+    public GameObject shotPrefab;
+    public Entity shotPrefabEntity;
+
     public void DeclareReferencedPrefabs(List<GameObject> referencedPrefabs)
     {
         referencedPrefabs.Add(playerPrefab);
         referencedPrefabs.Add(otherPlayerPrefab);
+        referencedPrefabs.Add(shotPrefab);
     }
 
     public void Convert(Entity entity, EntityManager dstManager, GameObjectConversionSystem conversionSystem)
     {
         playerPrefabEntity = conversionSystem.GetPrimaryEntity(playerPrefab);
         otherPlayerPrefabEntity = conversionSystem.GetPrimaryEntity(otherPlayerPrefab);
+        shotPrefabEntity = conversionSystem.GetPrimaryEntity(shotPrefab);
     }
 
     public static PrefabHolder Get()

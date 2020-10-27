@@ -6,21 +6,24 @@ class InputSystem : SystemBase
 {
     protected override void OnUpdate()
     {
-        var vec = new float2();
+        const float targetForwardSpeed = 3f;
+        const float targetRotationSpeed = 4f;
 
-        if (UnityEngine.Input.GetKey(KeyCode.LeftArrow)) { vec.x -= 1; }
-        if (UnityEngine.Input.GetKey(KeyCode.RightArrow)) { vec.x += 1; }
-        if (UnityEngine.Input.GetKey(KeyCode.UpArrow)) { vec.y += 1; }
-        if (UnityEngine.Input.GetKey(KeyCode.DownArrow)) { vec.y -= 1; }
+        var forwardSpeed = 0f;
+        var rotationSpeed = 0f;
+        var shoot = false;
 
-        if (math.length(vec) > 0f)
-        {
-            vec = math.mul(float2x2.Rotate(math.PI * 0.25f), math.normalize(vec));
-        }
+        if (UnityEngine.Input.GetKey(KeyCode.LeftArrow)) { rotationSpeed -= targetRotationSpeed; }
+        if (UnityEngine.Input.GetKey(KeyCode.RightArrow)) { rotationSpeed += targetRotationSpeed; }
+        if (UnityEngine.Input.GetKey(KeyCode.UpArrow)) { forwardSpeed += targetForwardSpeed; }
+        if (UnityEngine.Input.GetKey(KeyCode.DownArrow)) { forwardSpeed -= targetForwardSpeed; }
+        if (UnityEngine.Input.GetKeyDown(KeyCode.Space)) { shoot = true; }
 
         Entities.ForEach((ref Input input) =>
         {
-            input.Value = vec;
+            input.ForwardSpeed = forwardSpeed;
+            input.RotationSpeed = rotationSpeed;
+            input.Shoot = shoot;
         }).ScheduleParallel();
     }
 }
