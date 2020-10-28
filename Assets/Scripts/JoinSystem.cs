@@ -74,7 +74,7 @@ class JoinSystem : SystemBase
         // This component makes our keyboard input affect the Entity.
         EntityManager.AddComponentData(newPlayerEntity, new Input
         {
-            Value = new float2()
+
         });
 
         // Set a random starting position.
