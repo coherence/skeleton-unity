@@ -79,7 +79,7 @@ class JoinSystem : SystemBase
         });
 
         // This component makes our keyboard input affect the Entity.
-        EntityManager.AddComponentData(newPlayerEntity, new Input
+        EntityManager.AddComponentData(newPlayerEntity, new PlayerInput
         {
             ForwardSpeed = 0f,
             RotationSpeed = 0f,

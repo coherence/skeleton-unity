@@ -20,7 +20,7 @@ class ShootingSystem : SystemBase
         if(playerQuery.CalculateEntityCount() == 1) {
             var player = playerQuery.GetSingletonEntity();
 
-            Entities.ForEach((in LocalToWorld transform, in Input input) =>
+            Entities.ForEach((in LocalToWorld transform, in PlayerInput input) =>
             {
                 if(input.Shoot)
                 {

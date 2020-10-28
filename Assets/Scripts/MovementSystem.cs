@@ -11,7 +11,7 @@ class MovementSystem : SystemBase
 
         Entities.ForEach((ref Translation translation,
                           ref Rotation rotation,
-                          in Input input) =>
+                          in PlayerInput input) =>
         {
             var newRotation = math.mul(quaternion.RotateY(input.RotationSpeed * dt), rotation.Value);
             rotation.Value = newRotation;

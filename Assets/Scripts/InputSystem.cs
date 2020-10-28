@@ -13,13 +13,13 @@ class InputSystem : SystemBase
         var rotationSpeed = 0f;
         var shoot = false;
 
-        if (UnityEngine.Input.GetKey(KeyCode.LeftArrow)) { rotationSpeed -= targetRotationSpeed; }
-        if (UnityEngine.Input.GetKey(KeyCode.RightArrow)) { rotationSpeed += targetRotationSpeed; }
-        if (UnityEngine.Input.GetKey(KeyCode.UpArrow)) { forwardSpeed += targetForwardSpeed; }
-        if (UnityEngine.Input.GetKey(KeyCode.DownArrow)) { forwardSpeed -= targetForwardSpeed; }
-        if (UnityEngine.Input.GetKeyDown(KeyCode.Space)) { shoot = true; }
+        if (Input.GetKey(KeyCode.LeftArrow)) { rotationSpeed -= targetRotationSpeed; }
+        if (Input.GetKey(KeyCode.RightArrow)) { rotationSpeed += targetRotationSpeed; }
+        if (Input.GetKey(KeyCode.UpArrow)) { forwardSpeed += targetForwardSpeed; }
+        if (Input.GetKey(KeyCode.DownArrow)) { forwardSpeed -= targetForwardSpeed; }
+        if (Input.GetKeyDown(KeyCode.Space)) { shoot = true; }
 
-        Entities.ForEach((ref Input input) =>
+        Entities.ForEach((ref PlayerInput input) =>
         {
             input.ForwardSpeed = forwardSpeed;
             input.RotationSpeed = rotationSpeed;
