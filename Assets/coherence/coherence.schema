@@ -5,3 +5,4 @@ namespace Coherence.Generated.FirstProject
 component Player
 
 component Shot
+  Owner Entity

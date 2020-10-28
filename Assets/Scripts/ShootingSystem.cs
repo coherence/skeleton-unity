@@ -16,14 +16,21 @@ class ShootingSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        Entities.ForEach((in LocalToWorld transform, in Input input) =>
-        {
-            if(input.Shoot)
+        var playerQuery = EntityManager.CreateEntityQuery(typeof(Player), typeof(CoherenceSimulateComponent));
+        if(playerQuery.CalculateEntityCount() == 1) {
+            var player = playerQuery.GetSingletonEntity();
+
+            Entities.ForEach((in LocalToWorld transform, in Input input) =>
             {
-                var offset = new float3(0, 0.45f, 0) + math.mul(transform.Rotation, new float3(0, 0, 0.2f));
-                CreateShot(transform.Position + offset, transform.Rotation);
-            }
-        }).WithStructuralChanges().WithoutBurst().Run();
+                if(input.Shoot)
+                {
+                    var offset = new float3(0, 0.45f, 0) + math.mul(transform.Rotation, new float3(0, 0, 0.2f));
+                    CreateShot(player, transform.Position + offset, transform.Rotation);
+                }
+            }).WithStructuralChanges().WithoutBurst().Run();
+        } else {
+            UnityEngine.Debug.Log($"playerQuery.CalculateEntityCount() = {playerQuery.CalculateEntityCount()}");
+        }
 
         float dt = Time.DeltaTime;
 
@@ -33,7 +40,7 @@ class ShootingSystem : SystemBase
         }).ScheduleParallel();
     }
 
-    private Entity CreateShot(float3 position, quaternion rotation)
+    private Entity CreateShot(Entity owner, float3 position, quaternion rotation)
     {
         var shotPrefabEntity = PrefabHolder.Get().shotPrefabEntity;
         var newShotEntity = World.EntityManager.Instantiate(shotPrefabEntity);
@@ -50,7 +57,7 @@ class ShootingSystem : SystemBase
 
         EntityManager.AddComponentData(newShotEntity, new Shot()
         {
-
+            Owner = owner
         });
 
         EntityManager.SetComponentData(newShotEntity, new Translation()
