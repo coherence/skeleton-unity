@@ -13,10 +13,10 @@ class MovementSystem : SystemBase
                           ref Rotation rotation,
                           in PlayerInput input) =>
         {
-            var newRotation = math.mul(quaternion.RotateY(input.RotationSpeed * dt), rotation.Value);
-            rotation.Value = newRotation;
+            var rotate = quaternion.RotateY(input.RotationSpeed * dt);
+            rotation.Value = math.mul(rotate, rotation.Value);
 
-            var movementVector = math.forward(newRotation) * input.ForwardSpeed * dt;
+            var movementVector = math.forward(rotation.Value) * input.ForwardSpeed * dt;
             translation.Value += movementVector;
         }).ScheduleParallel();
     }

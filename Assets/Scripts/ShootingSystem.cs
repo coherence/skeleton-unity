@@ -16,49 +16,40 @@ class ShootingSystem : SystemBase
 
     protected override void OnUpdate()
     {
-        var playerQuery = EntityManager.CreateEntityQuery(typeof(Player), typeof(CoherenceSimulateComponent));
-        if(playerQuery.CalculateEntityCount() == 1) {
-            var player = playerQuery.GetSingletonEntity();
-
-            Entities.ForEach((in LocalToWorld transform, in PlayerInput input) =>
+        Entities.ForEach((in LocalToWorld transform, in PlayerInput input) =>
+        {
+            if(input.Shoot)
             {
-                if(input.Shoot)
-                {
-                    var offset = new float3(0, 0.45f, 0) + math.mul(transform.Rotation, new float3(0, 0, 0.2f));
-                    CreateShot(player, transform.Position + offset, transform.Rotation);
-                }
-            }).WithStructuralChanges().WithoutBurst().Run();
-        } else {
-            UnityEngine.Debug.Log($"playerQuery.CalculateEntityCount() = {playerQuery.CalculateEntityCount()}");
-        }
+                var offset = new float3(0, 0.45f, 0) + math.mul(transform.Rotation, new float3(0, 0, 0.2f));
+                CreateShot(transform.Position + offset, transform.Rotation);
+            }
+        }).WithStructuralChanges().WithoutBurst().Run();
+
+        // var playerQuery = EntityManager.CreateEntityQuery(typeof(Player), typeof(CoherenceSimulateComponent));
+        // if(playerQuery.CalculateEntityCount() == 1) {
+        //     var player = playerQuery.GetSingletonEntity();
+
+
+        // } else {
+        //     UnityEngine.Debug.Log($"playerQuery.CalculateEntityCount() = {playerQuery.CalculateEntityCount()}");
+        // }
 
         float dt = Time.DeltaTime;
 
-        Entities.ForEach((ref Translation translation, in Rotation rotation, in Shot shot) =>
+        Entities.ForEach((ref Translation translation, in Rotation rotation, in Shot shot, in CoherenceSimulateComponent sim) =>
         {
             translation.Value += math.forward(rotation.Value) * 5.0f * dt;
         }).ScheduleParallel();
     }
 
-    private Entity CreateShot(Entity owner, float3 position, quaternion rotation)
+    private void CreateShot(float3 position, quaternion rotation)
     {
         var shotPrefabEntity = PrefabHolder.Get().shotPrefabEntity;
-        var newShotEntity = World.EntityManager.Instantiate(shotPrefabEntity);
+        var newShotEntity = EntityManager.Instantiate(shotPrefabEntity);
 
-        EntityManager.AddComponentData(newShotEntity, new CoherenceSimulateComponent()
-        {
-
-        });
-
-        EntityManager.AddComponentData(newShotEntity, new CoherenceSessionComponent()
-        {
-
-        });
-
-        EntityManager.AddComponentData(newShotEntity, new Shot()
-        {
-            Owner = owner
-        });
+        EntityManager.AddComponent<CoherenceSimulateComponent>(newShotEntity);
+        EntityManager.AddComponent<CoherenceSessionComponent>(newShotEntity);
+        EntityManager.AddComponent<Shot>(newShotEntity);
 
         EntityManager.SetComponentData(newShotEntity, new Translation()
         {
@@ -69,7 +60,5 @@ class ShootingSystem : SystemBase
         {
             Value = rotation
         });
-
-        return newShotEntity;
     }
 }

@@ -9,11 +9,6 @@ using Coherence.Generated.Internal.FirstProject;
 [AlwaysUpdateSystem]
 class HitSystem : SystemBase
 {
-    protected override void OnStartRunning()
-    {
-
-    }
-
     protected override void OnUpdate()
     {
         var playerQuery = EntityManager.CreateEntityQuery(typeof(Player), typeof(CoherenceSimulateComponent));
@@ -25,25 +20,24 @@ class HitSystem : SystemBase
             Entities.WithNone<CoherenceSimulateComponent>().ForEach((ref Shot shot, in Translation translation) =>
             {
                 if(math.distance(translation.Value, playerPosition) < 1f) {
-                    //var who = shot.Owner == player ? "self" : "enemy";
-                    //UnityEngine.Debug.Log($"Shot hit a player! ({who}, {shot.Owner})");
-                    UnityEngine.Debug.Log($"Shot hit player!");
                     playerWasHit = true;
                 }
             }).Run();
 
             if(playerWasHit) {
-                var range = 4.0f;
-                EntityManager.SetComponentData(player, new Translation()
-                {
-                    Value = new float3(UnityEngine.Random.Range(-range, range),
-                                       0.25f,
-                                       UnityEngine.Random.Range(-range, range))
-                });
+                Respawn(player);
             }
         }
-        else {
-            UnityEngine.Debug.Log("No player found.");
-        }
+    }
+
+    void Respawn(Entity player)
+    {
+        var range = 4.0f;
+        EntityManager.SetComponentData(player, new Translation()
+        {
+            Value = new float3(UnityEngine.Random.Range(-range, range),
+                               0.25f,
+                               UnityEngine.Random.Range(-range, range))
+        });
     }
 }
