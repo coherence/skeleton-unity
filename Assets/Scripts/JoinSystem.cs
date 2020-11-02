@@ -4,25 +4,35 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Coherence.Replication.Client.Unity.Ecs;
 using Coherence.Generated.FirstProject;
-using Coherence.Generated.Internal.FirstProject;
+using UnityEngine;
 
+[DisableAutoCreation]
 [AlwaysUpdateSystem]
 class JoinSystem : SystemBase
 {
     protected override void OnStartRunning()
     {
+        Debug.Log("JoinSystem::OnStartRunning");
         var networkSystem = World.GetExistingSystem<NetworkSystem>();
         networkSystem.Connect("127.0.0.1:12345");
     }
 
+    bool once;
+
     protected override void OnUpdate()
     {
-        // Are we connected yet?
-        Entities.ForEach((in ConnectedEvent connected) =>
-        {
+        // // Are we connected yet?
+        // Entities.ForEach((in ConnectedEvent connected) =>
+        // {
+        //     CreateWorldPositionQuery();
+        //     CreateLocalPlayer();
+        // }).WithStructuralChanges().WithoutBurst().Run();
+
+        if(!once && World.GetExistingSystem<NetworkSystem>().IsConnected) {
+            once = true;
             CreateWorldPositionQuery();
             CreateLocalPlayer();
-        }).WithStructuralChanges().WithoutBurst().Run();
+        }
 
         // Detect remotely simulated Player entities and instantiate a proper Prefab for them.
         Entities.WithNone<RenderMesh>().ForEach((Entity networkEntity, in Player player) =>
@@ -31,6 +41,30 @@ class JoinSystem : SystemBase
             var newPlayerEntity = World.EntityManager.Instantiate(otherPlayerPrefabEntity);
             EntityReplacer.Replace(EntityManager, networkEntity, newPlayerEntity);
         }).WithStructuralChanges().WithoutBurst().Run();
+
+        Entities.ForEach((Entity entity,
+                          ref DynamicBuffer<AssignToTeam> buffer,
+                          in Player player) =>
+        {
+            if (buffer.Length == 0)
+            {
+                return;
+            }
+
+            var commands = buffer.Reinterpret<AssignToTeam>();
+
+            for (var i = 0; i < commands.Length; i++)
+            {
+                var command = commands[i];
+                Debug.Log($"Got command to assign player to team {command.Team}");
+                var teamLabel = GameObject.Find("TeamLabel").GetComponent<UnityEngine.UI.Text>().text = $"Team {command.Team}";
+                EntityManager.AddComponentData(entity, new TeamMember() {
+                        Team = command.Team
+                    });
+            }
+
+            buffer.Clear();
+        }).WithoutBurst().Run();
     }
 
     void CreateWorldPositionQuery()

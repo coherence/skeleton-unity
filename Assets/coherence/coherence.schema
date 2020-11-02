@@ -3,3 +3,9 @@ name FirstProject
 namespace Coherence.Generated.FirstProject
 
 component Player
+
+command AssignToTeam
+  Team Int
+
+component TeamMember
+  Team Int
