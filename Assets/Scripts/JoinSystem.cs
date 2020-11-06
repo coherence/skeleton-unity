@@ -66,7 +66,7 @@ class JoinSystem : SystemBase
         });
 
         // This component makes the Entity disappear if we log out or disconnect.
-        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
+        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSession
         {
 
         });
