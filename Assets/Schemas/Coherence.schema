@@ -3,3 +3,17 @@ name FirstProject
 namespace Coherence.Generated.FirstProject
 
 component Player
+
+event Bam
+  strength Int
+
+event Bom
+  strength Int
+
+event Bim
+  strength Int
+
+command Haha
+  x Int
+  y Float
+  z Bool

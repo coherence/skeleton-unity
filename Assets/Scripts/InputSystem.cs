@@ -1,3 +1,5 @@
+using Coherence.Generated.FirstProject;
+using Coherence.Replication.Client.Unity.Ecs;
 using Unity.Entities;
 using Unity.Mathematics;
 using UnityEngine;
@@ -22,5 +24,56 @@ class InputSystem : SystemBase
         {
             input.Value = vec;
         }).ScheduleParallel();
+
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            AddEvent(0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            AddEvent(1);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            AddEvent(2);
+        }
+
+        //Entities.ForEach((Entity entity, in Bam bam) =>
+        //{
+        //    Debug.Log($"The entity {entity} has a Bam event with strength {bam.strength}");
+        //}).WithStructuralChanges().WithoutBurst().Run();
+    }
+
+    void AddEvent(int type)
+    {
+        Entities.WithAll<CoherenceSimulateComponent>()
+                .ForEach((Entity localPlayer, in Player player) =>
+                {
+                    var randomStrength = UnityEngine.Random.Range(0, 1000);
+                    Debug.Log($"Sending Event ({type}) of strength {randomStrength} to {localPlayer}");
+                    if(type == 0)
+                    {
+                        EntityManager.AddComponentData(localPlayer, new Bam()
+                        {
+                            strength = randomStrength
+                        });
+                    }
+                    else if (type == 1)
+                    {
+                        EntityManager.AddComponentData(localPlayer, new Bom()
+                        {
+                            strength = randomStrength
+                        });
+                    }
+                    else if (type == 2)
+                    {
+                        EntityManager.AddComponentData(localPlayer, new Bim()
+                        {
+                            strength = randomStrength
+                        });
+                    }
+                }).WithStructuralChanges().WithoutBurst().Run();
     }
 }
