@@ -12,7 +12,7 @@ class JoinSystem : SystemBase
     protected override void OnStartRunning()
     {
         var networkSystem = World.GetExistingSystem<NetworkSystem>();
-        networkSystem.Connect("127.0.0.1:12345");
+        networkSystem.Connect("127.0.0.1:32001");
     }
 
     protected override void OnUpdate()
