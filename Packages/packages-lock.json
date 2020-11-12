@@ -234,7 +234,7 @@
       }
     },
     "io.coherence.sdk": {
-      "version": "https://github.com/coherence/unity.git#v0.1.0",
+      "version": "https://github.com/coherence/unity.git#v2020.1.0-a75",
       "depth": 0,
       "source": "git",
       "dependencies": {
@@ -243,7 +243,7 @@
         "com.unity.rendering.hybrid": "0.10.0-preview.21",
         "com.unity.test-framework": "1.1.18"
       },
-      "hash": "84ecb04aea772411ce57351543e463992711015b"
+      "hash": "014e149141da202594b7a611a24f6bccae88e4b5"
     },
     "nuget.mono-cecil": {
       "version": "0.1.6-preview",
