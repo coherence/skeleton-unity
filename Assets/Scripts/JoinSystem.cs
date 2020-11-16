@@ -37,7 +37,7 @@ class JoinSystem : SystemBase
     {
         var worldQueryEntity = EntityManager.CreateEntity();
 
-        EntityManager.AddComponentData(worldQueryEntity, new CoherenceSimulateComponent
+        EntityManager.AddComponentData(worldQueryEntity, new Simulated
         {
 
         });
@@ -60,13 +60,13 @@ class JoinSystem : SystemBase
         });
 
         // This component makes us responsible for the simulation of the Entity.
-        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSimulateComponent
+        EntityManager.AddComponentData(newPlayerEntity, new Simulated
         {
 
         });
 
         // This component makes the Entity disappear if we log out or disconnect.
-        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSession
+        EntityManager.AddComponentData(newPlayerEntity, new SessionBased
         {
 
         });

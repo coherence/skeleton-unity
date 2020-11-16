@@ -32,7 +32,7 @@ static class TypeIds
 
 	public const uint InternalWorldPositionQuery = 3;
 
-	public const uint InternalCoherenceSession = 4;
+	public const uint InternalSessionBased = 4;
 
 	public const uint InternalPlayer = 5;
 
@@ -58,7 +58,7 @@ enum TypeEnums
 
 	InternalWorldPositionQuery = 3,
 
-	InternalCoherenceSession = 4,
+	InternalSessionBased = 4,
 
 	InternalPlayer = 5,
 
@@ -226,8 +226,8 @@ namespace Coherence.Generated.FirstProject
 	
 	
 	
-	// EcsComponentData: InternalCoherenceSessionData
-	public struct CoherenceSession : IComponentData
+	// EcsComponentData: InternalSessionBasedData
+	public struct SessionBased : IComponentData
 	{
 	}
 	
@@ -351,10 +351,10 @@ namespace Coherence.Generated.Internal.FirstProject
 						break;
 					}
 					
-                    case TypeIds.InternalCoherenceSession:
+                    case TypeIds.InternalSessionBased:
 					{
-						var data = entityManager.GetComponentData<CoherenceSession>(entity);
-						messageSerializers.CoherenceSession(protocolOutStream, data);
+						var data = entityManager.GetComponentData<SessionBased>(entity);
+						messageSerializers.SessionBased(protocolOutStream, data);
 						break;
 					}
 					
@@ -519,13 +519,13 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		}
 
-        private void DeserializeCoherenceSession(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeSessionBased(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
 			// No need to read empty components, just ensure that it's there
-            if (!entityManager.HasComponent<CoherenceSession>(entity))
+            if (!entityManager.HasComponent<SessionBased>(entity))
 		    {
-				entityManager.AddComponent<CoherenceSession>(entity);
+				entityManager.AddComponent<SessionBased>(entity);
 			}
 
 		}
@@ -551,7 +551,7 @@ namespace Coherence.Generated.Internal.FirstProject
         public void ReadComponentDataUpdateEx(EntityManager entityManager, Entity entity, uint componentType, AbsoluteSimulationFrame simulationFrame, IInBitStream bitStream, bool justCreated, ILog log)
         {
             var componentOwnership = Deserializator.ReadComponentOwnership(bitStream, log); // Read bit from stream...
-            componentOwnership = entityManager.HasComponent<CoherenceSimulateComponent>(entity); // Then overwrite it with entity ownership.
+            componentOwnership = entityManager.HasComponent<Simulated>(entity); // Then overwrite it with entity ownership.
             var inProtocolStream = new Coherence.FieldStream.Deserialize.Streams.InBitStream(bitStream, log);
             switch (componentType)
             {
@@ -572,8 +572,8 @@ namespace Coherence.Generated.Internal.FirstProject
 				DeserializeWorldPositionQuery(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
-			case TypeIds.InternalCoherenceSession:
-				DeserializeCoherenceSession(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+			case TypeIds.InternalSessionBased:
+				DeserializeSessionBased(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
 			case TypeIds.InternalPlayer:
@@ -670,14 +670,14 @@ namespace Coherence.Generated.Internal.FirstProject
                     break;
 				}
 
-				case TypeIds.InternalCoherenceSession:
+				case TypeIds.InternalSessionBased:
                 {
                     var justCreated = false;
-                    var hasComponentData = entityManager.HasComponent<CoherenceSession>(entity);
-                    var componentHasBeenRemoved = entityManager.HasComponent<CoherenceSession_Sync>(entity) && entityManager.GetComponentData<CoherenceSession_Sync>(entity).deletedAtTime > 0;
+                    var hasComponentData = entityManager.HasComponent<SessionBased>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<SessionBased_Sync>(entity) && entityManager.GetComponentData<SessionBased_Sync>(entity).deletedAtTime > 0;
                     if (!hasComponentData && !componentHasBeenRemoved)
                     {
-                        entityManager.AddComponentData(entity, new CoherenceSession());
+                        entityManager.AddComponentData(entity, new SessionBased());
                         justCreated = true;
                     }
 
@@ -783,9 +783,9 @@ namespace Coherence.Generated.Internal.FirstProject
             unityReaders.Read(ref ignored, protocolStream);
 		}
 		
-		private void DeserializeCoherenceSession(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		private void DeserializeSessionBased(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
-            var ignored = new CoherenceSession();
+            var ignored = new SessionBased();
             unityReaders.Read(ref ignored, protocolStream);
 		}
 		
@@ -817,8 +817,8 @@ namespace Coherence.Generated.Internal.FirstProject
 					DeserializeWorldPositionQuery(inProtocolStream);
                     break;
 
-                case TypeIds.InternalCoherenceSession:
-					DeserializeCoherenceSession(inProtocolStream);
+                case TypeIds.InternalSessionBased:
+					DeserializeSessionBased(inProtocolStream);
                     break;
 
                 case TypeIds.InternalPlayer:
@@ -889,6 +889,7 @@ namespace Coherence.Generated.Internal.FirstProject
         private void ChangeClockSpeed(ClockSpeedFactor factor)
         {
             const float desiredTimestep = 1f / 60f;
+            const int maxSubsteps = 10;
             var timeStep = 0f;
             if (factor.FactorTimesThousand <= 1)
             {
@@ -898,7 +899,7 @@ namespace Coherence.Generated.Internal.FirstProject
 	            timeStep = desiredTimestep * 1000f / factor.FactorTimesThousand;
             }
 
-            simGroup.SetTimeStep(true, timeStep, 0);
+            simGroup.SetTimeStep(true, timeStep, maxSubsteps);
         }
 
         protected override void OnUpdate()
@@ -1007,9 +1008,9 @@ namespace Coherence.Generated.Internal.FirstProject
     }
 
 
-    public struct CoherenceSession_Sync : IComponentData
+    public struct SessionBased_Sync : IComponentData
     {
-        public CoherenceSession lastSentData;
+        public SessionBased lastSentData;
         public uint resendMask;
         public uint howImportantAreYou;
         public uint accumulatedPriority;
@@ -1147,11 +1148,11 @@ namespace Coherence.Generated.Internal.FirstProject
         }
         
 
-        private void SerializeCoherenceSession(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        private void SerializeSessionBased(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Reset accumulated priority so the same component is not sent again next frame
-            var syncData = EntityManager.GetComponentData<CoherenceSession_Sync>(entity);
+            var syncData = EntityManager.GetComponentData<SessionBased_Sync>(entity);
 
             syncData.accumulatedPriority = 0;
 
@@ -1197,8 +1198,8 @@ namespace Coherence.Generated.Internal.FirstProject
                     SerializeWorldPositionQuery(entityManager, unityEntity, fieldMask, protocolOutStream);
                     break;
 
-                case TypeIds.InternalCoherenceSession:
-                    SerializeCoherenceSession(entityManager, unityEntity, fieldMask, protocolOutStream);
+                case TypeIds.InternalSessionBased:
+                    SerializeSessionBased(entityManager, unityEntity, fieldMask, protocolOutStream);
                     break;
 
                 case TypeIds.InternalPlayer:
@@ -1248,9 +1249,9 @@ namespace Coherence.Generated.Internal.FirstProject
                     break;
                 }
 
-                case TypeIds.InternalCoherenceSession:
+                case TypeIds.InternalSessionBased:
                 {
-                    var syncData = entityManager.GetComponentData<CoherenceSession_Sync>(unityEntity);
+                    var syncData = entityManager.GetComponentData<SessionBased_Sync>(unityEntity);
                     syncData.deleteHasBeenSerialized = true;
                     entityManager.SetComponentData(unityEntity, syncData);
                     break;
@@ -1392,7 +1393,7 @@ public class UnityReaders
 	}
 
 	
-	public uint Read(ref CoherenceSession data, IInBitStream bitstream)
+	public uint Read(ref SessionBased data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 
@@ -1514,7 +1515,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
 		
 		
-		public void Write(in CoherenceSession data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		public void Write(in SessionBased data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 		{
 	
 	     }
@@ -1602,7 +1603,7 @@ public class MessageSerializers
 
 	}
 
-	public void CoherenceSession(IOutBitStream bitstream, CoherenceSession data)
+	public void SessionBased(IOutBitStream bitstream, SessionBased data)
 	{
 
 	}
@@ -1756,7 +1757,7 @@ public class MessageDeserializers
      
 	}
 
-	public void CoherenceSession(IInBitStream bitstream, ref CoherenceSession data)
+	public void SessionBased(IInBitStream bitstream, ref SessionBased data)
 	{
      
 	}
@@ -1899,7 +1900,7 @@ namespace Coherence.Sdk.Unity
            GlobalLookups.Register<Rotation>(TypeEnums.InternalWorldOrientation);
            GlobalLookups.Register<LocalUser>(TypeEnums.InternalLocalUser);
            GlobalLookups.Register<WorldPositionQuery>(TypeEnums.InternalWorldPositionQuery);
-           GlobalLookups.Register<CoherenceSession>(TypeEnums.InternalCoherenceSession);
+           GlobalLookups.Register<SessionBased>(TypeEnums.InternalSessionBased);
            GlobalLookups.Register<Player>(TypeEnums.InternalPlayer);
 
 			#endregion
@@ -1909,7 +1910,7 @@ namespace Coherence.Sdk.Unity
            GlobalTypeIdLookups.Register<Rotation>(TypeIds.InternalWorldOrientation);
            GlobalTypeIdLookups.Register<LocalUser>(TypeIds.InternalLocalUser);
            GlobalTypeIdLookups.Register<WorldPositionQuery>(TypeIds.InternalWorldPositionQuery);
-           GlobalTypeIdLookups.Register<CoherenceSession>(TypeIds.InternalCoherenceSession);
+           GlobalTypeIdLookups.Register<SessionBased>(TypeIds.InternalSessionBased);
            GlobalTypeIdLookups.Register<Player>(TypeIds.InternalPlayer);
 
 			#endregion
@@ -1957,11 +1958,11 @@ namespace Coherence.Generated.Internal.FirstProject
             }
             var mapper = World.GetExistingSystem<SyncSendSystem>().Sender.Mapper;
             
-            Entities.WithNone<CoherenceMappedComponent>().ForEach((Entity entity, int entityInQueryIndex, in CoherenceSimulateComponent simulate) =>
+            Entities.WithNone<Mapped>().ForEach((Entity entity, int entityInQueryIndex, in Simulated simulate) =>
             {
                 var id = mapper.NextEntityId;
                 mapper.Add(id, entity);
-                EntityManager.AddComponent<CoherenceMappedComponent>(entity);
+                EntityManager.AddComponent<Mapped>(entity);
             }).WithStructuralChanges().WithoutBurst().Run();
 
             Dependency.Complete();
@@ -2027,8 +2028,6 @@ namespace Coherence.Generated.Internal.FirstProject
 			    }
             }
 
-	        var log = new Log(new UnityLogger(LogLevel.Debug));
-
 	        var burstSender = cachedSender;
 	        var mapper = cachedSender.Mapper;
 
@@ -2060,7 +2059,7 @@ namespace Coherence.Generated.Internal.FirstProject
 	                        var octetStream = new OctetWriter(512);
 	                        var bitStream = new OutBitStream(octetStream);
 	                        EntityIdSerializer.Serialize(coherenceEntityId, bitStream);
-	                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, log);
+	                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, null);
 
 	                        // --------- Type Specific Part ---------------
 	                        ComponentTypeIdSerializer.Serialize(TypeIds.InternalHaha, bitStream);
@@ -2169,12 +2168,12 @@ namespace Coherence.Generated.Internal.FirstProject
 					break;
 				}
 
-				case TypeIds.InternalCoherenceSession:
+				case TypeIds.InternalSessionBased:
 				{
-					var hasComponentData = entityManager.HasComponent<CoherenceSession>(entity);
+					var hasComponentData = entityManager.HasComponent<SessionBased>(entity);
 					if (hasComponentData)
 					{
-						entityManager.RemoveComponent<CoherenceSession>(entity);
+						entityManager.RemoveComponent<SessionBased>(entity);
 					}
 					break;
 				}
@@ -2259,7 +2258,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				// Deserialize and apply component updates
 				if (entity != default)
 				{
-					if (entityManager.HasComponent<CoherenceSimulateComponent>(entity))
+					if (entityManager.HasComponent<Simulated>(entity))
 					{
 						DeserializeComponentSkip.SkipComponents(componentSkip, bitStream, log);
 						log.Warning($"Trying to update owned entity {entityWithMeta.EntityId}");
@@ -2292,20 +2291,20 @@ namespace Coherence.Generated.Internal.FirstProject
 				}
 				entity = entityManager.CreateEntity();
 				mapper.Add(entityWithMeta.EntityId, entity);
-				entityManager.AddComponent<CoherenceMappedComponent>(entity);
+				entityManager.AddComponent<Mapped>(entity);
 			}
 
-			// Entities OWNERSHIP determines iff they should have CoherenceSimulateComponent
-			var hasComponentData = entityManager.HasComponent<CoherenceSimulateComponent>(entity);
+			// Entities OWNERSHIP determines iff they should have Simulated
+			var hasComponentData = entityManager.HasComponent<Simulated>(entity);
 			if (hasComponentData && !entityWithMeta.Ownership)
 			{
-				entityManager.RemoveComponent<CoherenceSimulateComponent>(entity);
-				entityManager.RemoveComponent<CoherenceSimulateComponentLinger>(entity);
+				entityManager.RemoveComponent<Simulated>(entity);
+				entityManager.RemoveComponent<LingerSimulated>(entity);
 				RemoveSyncComponents(entityManager, entity);
 			}
 			else if (!hasComponentData && entityWithMeta.Ownership)
 			{
-				entityManager.AddComponentData(entity, new CoherenceSimulateComponent());
+				entityManager.AddComponentData(entity, new Simulated());
 				RemoveInterpolationComponents(entityManager, entity);
 			}
 
@@ -2320,7 +2319,7 @@ namespace Coherence.Generated.Internal.FirstProject
 						if (entityManager.Exists(entity))
 						{
 							mapper.Remove(entityWithMeta.EntityId); // This internally requires entity to exist...
-							entityManager.RemoveComponent<CoherenceSimulateComponentLinger>(entity);
+							entityManager.RemoveComponent<LingerSimulated>(entity);
 							entityManager.DestroyEntity(entity);    // ...so this must be executed afterwards ...
 						}
 						else
@@ -2415,12 +2414,12 @@ namespace Coherence.Generated.Internal.FirstProject
 					break;
 				}
 
-				case TypeIds.InternalCoherenceSession:
+				case TypeIds.InternalSessionBased:
 				{
-					var hasComponentData = entityManager.HasComponent<CoherenceSession_Sync>(entity);
+					var hasComponentData = entityManager.HasComponent<SessionBased_Sync>(entity);
 					if (hasComponentData)
 					{
-						var syncData = entityManager.GetComponentData<CoherenceSession_Sync>(entity);
+						var syncData = entityManager.GetComponentData<SessionBased_Sync>(entity);
 
 						syncData.resendMask |= fieldMask;
 						entityManager.SetComponentData(entity, syncData);
@@ -2471,14 +2470,14 @@ namespace Coherence.Generated.Internal.FirstProject
 				return;
 			}
 
-			if (!entityManager.HasComponent<CoherenceSimulateComponent>(entity))
+			if (!entityManager.HasComponent<Simulated>(entity))
 			{
 				// Ownership may have been lost since the packet was sent
-				log.Trace($"Entity is missing CoherenceSimulateComponent: {entity} ComponentTypeId: {componentTypeId}");
+				log.Trace($"Entity is missing Simulated: {entity} ComponentTypeId: {componentTypeId}");
 				return;
 			}
 
-			var sim = entityManager.GetComponentData<CoherenceSimulateComponent>(entity);
+			var sim = entityManager.GetComponentData<Simulated>(entity);
 			sim.hasReceivedConstructor = true;
 
 			switch (componentTypeId)
@@ -2548,18 +2547,18 @@ namespace Coherence.Generated.Internal.FirstProject
 					break;
 				}
 
-				case TypeIds.InternalCoherenceSession:
+				case TypeIds.InternalSessionBased:
 				{
-					var hasComponentData = entityManager.HasComponent<CoherenceSession_Sync>(entity);
+					var hasComponentData = entityManager.HasComponent<SessionBased_Sync>(entity);
 					if (hasComponentData)
 					{
-						var syncData = entityManager.GetComponentData<CoherenceSession_Sync>(entity);
+						var syncData = entityManager.GetComponentData<SessionBased_Sync>(entity);
 						syncData.hasReceivedConstructor = true;
 						entityManager.SetComponentData(entity, syncData);
 					} else
 					{
 						// Ownership may have been lost since the packet was sent
-						log.Trace($"Sync component has been destroyed: {entity} CoherenceSession_Sync");
+						log.Trace($"Sync component has been destroyed: {entity} SessionBased_Sync");
 					}
 					break;
 				}
@@ -2624,9 +2623,9 @@ namespace Coherence.Generated.Internal.FirstProject
 				entityManager.RemoveComponent<WorldPositionQuery_Sync>(entity);
 			}
 
-			if (entityManager.HasComponent<CoherenceSession_Sync>(entity))
+			if (entityManager.HasComponent<SessionBased_Sync>(entity))
 			{
-				entityManager.RemoveComponent<CoherenceSession_Sync>(entity);
+				entityManager.RemoveComponent<SessionBased_Sync>(entity);
 			}
 
 			if (entityManager.HasComponent<Player_Sync>(entity))
@@ -2774,10 +2773,10 @@ namespace Coherence.Generated.FirstProject
 		
 			}
 		
-            if(entityManager.HasComponent<CoherenceSession>(source))
+            if(entityManager.HasComponent<SessionBased>(source))
 			{
-		        // CoherenceSession has no fields, will just add it.
-		        entityManager.AddComponentData<CoherenceSession>(destination, new CoherenceSession());
+		        // SessionBased has no fields, will just add it.
+		        entityManager.AddComponentData<SessionBased>(destination, new SessionBased());
 		
 			}
 		
@@ -2831,7 +2830,7 @@ namespace Coherence.Generated.Internal.FirstProject
         protected override void OnUpdate()
         {
 
-            Entities.WithAll<Translation, CoherenceSimulateComponent>().WithNone<WorldPosition_Sync>().ForEach((Entity entity) =>
+            Entities.WithAll<Translation, Simulated>().WithNone<WorldPosition_Sync>().ForEach((Entity entity) =>
 			{
 
 				EntityManager.AddComponentData(entity, new WorldPosition_Sync 
@@ -2840,7 +2839,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<Rotation, CoherenceSimulateComponent>().WithNone<WorldOrientation_Sync>().ForEach((Entity entity) =>
+            Entities.WithAll<Rotation, Simulated>().WithNone<WorldOrientation_Sync>().ForEach((Entity entity) =>
 			{
 
 				EntityManager.AddComponentData(entity, new WorldOrientation_Sync 
@@ -2849,7 +2848,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.FirstProject.LocalUser, CoherenceSimulateComponent>().WithNone<LocalUser_Sync>().ForEach((Entity entity) =>
+            Entities.WithAll<global::Coherence.Generated.FirstProject.LocalUser, Simulated>().WithNone<LocalUser_Sync>().ForEach((Entity entity) =>
 			{
 
 				EntityManager.AddComponentData(entity, new LocalUser_Sync 
@@ -2858,7 +2857,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.FirstProject.WorldPositionQuery, CoherenceSimulateComponent>().WithNone<WorldPositionQuery_Sync>().ForEach((Entity entity) =>
+            Entities.WithAll<global::Coherence.Generated.FirstProject.WorldPositionQuery, Simulated>().WithNone<WorldPositionQuery_Sync>().ForEach((Entity entity) =>
 			{
 
 				EntityManager.AddComponentData(entity, new WorldPositionQuery_Sync 
@@ -2867,16 +2866,16 @@ namespace Coherence.Generated.Internal.FirstProject
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.FirstProject.CoherenceSession, CoherenceSimulateComponent>().WithNone<CoherenceSession_Sync>().ForEach((Entity entity) =>
+            Entities.WithAll<global::Coherence.Generated.FirstProject.SessionBased, Simulated>().WithNone<SessionBased_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new CoherenceSession_Sync 
+				EntityManager.AddComponentData(entity, new SessionBased_Sync 
 				{
 					howImportantAreYou = 600
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.FirstProject.Player, CoherenceSimulateComponent>().WithNone<Player_Sync>().ForEach((Entity entity) =>
+            Entities.WithAll<global::Coherence.Generated.FirstProject.Player, Simulated>().WithNone<Player_Sync>().ForEach((Entity entity) =>
 			{
 
 				EntityManager.AddComponentData(entity, new Player_Sync 
@@ -2918,7 +2917,7 @@ namespace Coherence.Generated.Internal.FirstProject
 		    var localComponentChanges = componentChanges.AsParallelWriter();
 
 
-			Entities.ForEach((Entity entity, ref WorldPosition_Sync sync, in Translation data, in CoherenceSimulateComponent simulate) =>
+			Entities.ForEach((Entity entity, ref WorldPosition_Sync sync, in Translation data, in Simulated simulate) =>
 			{
 				uint mask = 0;
 				if (!sync.hasBeenSerialized) 
@@ -2948,7 +2947,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				}
 			}).ScheduleParallel();
 
-			Entities.ForEach((Entity entity, ref WorldOrientation_Sync sync, in Rotation data, in CoherenceSimulateComponent simulate) =>
+			Entities.ForEach((Entity entity, ref WorldOrientation_Sync sync, in Rotation data, in Simulated simulate) =>
 			{
 				uint mask = 0;
 				if (!sync.hasBeenSerialized) 
@@ -2978,7 +2977,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				}
 			}).ScheduleParallel();
 
-			Entities.ForEach((Entity entity, ref LocalUser_Sync sync, in global::Coherence.Generated.FirstProject.LocalUser data, in CoherenceSimulateComponent simulate) =>
+			Entities.ForEach((Entity entity, ref LocalUser_Sync sync, in global::Coherence.Generated.FirstProject.LocalUser data, in Simulated simulate) =>
 			{
 				uint mask = 0;
 				if (!sync.hasBeenSerialized) 
@@ -3008,7 +3007,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				}
 			}).ScheduleParallel();
 
-			Entities.ForEach((Entity entity, ref WorldPositionQuery_Sync sync, in global::Coherence.Generated.FirstProject.WorldPositionQuery data, in CoherenceSimulateComponent simulate) =>
+			Entities.ForEach((Entity entity, ref WorldPositionQuery_Sync sync, in global::Coherence.Generated.FirstProject.WorldPositionQuery data, in Simulated simulate) =>
 			{
 				uint mask = 0;
 				if (!sync.hasBeenSerialized) 
@@ -3042,7 +3041,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				}
 			}).ScheduleParallel();
 
-			Entities.ForEach((Entity entity, ref CoherenceSession_Sync sync, in global::Coherence.Generated.FirstProject.CoherenceSession data, in CoherenceSimulateComponent simulate) =>
+			Entities.ForEach((Entity entity, ref SessionBased_Sync sync, in global::Coherence.Generated.FirstProject.SessionBased data, in Simulated simulate) =>
 			{
 				uint mask = 0;
 				if (!sync.hasBeenSerialized) 
@@ -3057,7 +3056,7 @@ namespace Coherence.Generated.Internal.FirstProject
 					var componentChange = new ComponentChange
 					{
 						entity = entity,
-						componentType = TypeIds.InternalCoherenceSession,
+						componentType = TypeIds.InternalSessionBased,
 						mask = mask,
 						resendMask = sync.resendMask,
 						entityHasReceivedConstructor = simulate.hasReceivedConstructor,
@@ -3068,7 +3067,7 @@ namespace Coherence.Generated.Internal.FirstProject
 				}
 			}).ScheduleParallel();
 
-			Entities.ForEach((Entity entity, ref Player_Sync sync, in global::Coherence.Generated.FirstProject.Player data, in CoherenceSimulateComponent simulate) =>
+			Entities.ForEach((Entity entity, ref Player_Sync sync, in global::Coherence.Generated.FirstProject.Player data, in Simulated simulate) =>
 			{
 				uint mask = 0;
 				if (!sync.hasBeenSerialized) 
@@ -3130,7 +3129,7 @@ namespace Coherence.Generated.Internal.FirstProject
 			var localComponentChanges = componentChanges.AsParallelWriter();
 			
 
-			Entities.WithNone<Translation>().ForEach((Entity entity, ref WorldPosition_Sync sync, in CoherenceSimulateComponent sim) =>
+			Entities.WithNone<Translation>().ForEach((Entity entity, ref WorldPosition_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
                 {
@@ -3151,7 +3150,7 @@ namespace Coherence.Generated.Internal.FirstProject
                 });
             }).ScheduleParallel();
 
-			Entities.WithNone<Rotation>().ForEach((Entity entity, ref WorldOrientation_Sync sync, in CoherenceSimulateComponent sim) =>
+			Entities.WithNone<Rotation>().ForEach((Entity entity, ref WorldOrientation_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
                 {
@@ -3172,7 +3171,7 @@ namespace Coherence.Generated.Internal.FirstProject
                 });
             }).ScheduleParallel();
 
-			Entities.WithNone<global::Coherence.Generated.FirstProject.LocalUser>().ForEach((Entity entity, ref LocalUser_Sync sync, in CoherenceSimulateComponent sim) =>
+			Entities.WithNone<global::Coherence.Generated.FirstProject.LocalUser>().ForEach((Entity entity, ref LocalUser_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
                 {
@@ -3193,7 +3192,7 @@ namespace Coherence.Generated.Internal.FirstProject
                 });
             }).ScheduleParallel();
 
-			Entities.WithNone<global::Coherence.Generated.FirstProject.WorldPositionQuery>().ForEach((Entity entity, ref WorldPositionQuery_Sync sync, in CoherenceSimulateComponent sim) =>
+			Entities.WithNone<global::Coherence.Generated.FirstProject.WorldPositionQuery>().ForEach((Entity entity, ref WorldPositionQuery_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
                 {
@@ -3214,7 +3213,7 @@ namespace Coherence.Generated.Internal.FirstProject
                 });
             }).ScheduleParallel();
 
-			Entities.WithNone<global::Coherence.Generated.FirstProject.CoherenceSession>().ForEach((Entity entity, ref CoherenceSession_Sync sync, in CoherenceSimulateComponent sim) =>
+			Entities.WithNone<global::Coherence.Generated.FirstProject.SessionBased>().ForEach((Entity entity, ref SessionBased_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
                 {
@@ -3229,13 +3228,13 @@ namespace Coherence.Generated.Internal.FirstProject
                 localComponentChanges.Add(sync.accumulatedPriority, new ComponentChange
                 {
                     entity = entity,
-                    componentType = TypeIds.InternalCoherenceSession,
+                    componentType = TypeIds.InternalSessionBased,
                     mask = 0,
                     resendMask = 0,
                 });
             }).ScheduleParallel();
 
-			Entities.WithNone<global::Coherence.Generated.FirstProject.Player>().ForEach((Entity entity, ref Player_Sync sync, in CoherenceSimulateComponent sim) =>
+			Entities.WithNone<global::Coherence.Generated.FirstProject.Player>().ForEach((Entity entity, ref Player_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
                 {
@@ -3300,17 +3299,17 @@ namespace Coherence.Replication.Client.Unity.Ecs
 			var simulationFrame = World.GetExistingSystem<CoherenceSimulationSystemGroup>().SimulationFrame;
 			
 			// Ensure all simulated entities have their system state component in order to track entity destruction
-			Entities.WithNone<CoherenceSimulateComponentLinger>().ForEach((Entity entity, int entityInQueryIndex, in CoherenceSimulateComponent simulate) =>
+			Entities.WithNone<LingerSimulated>().ForEach((Entity entity, int entityInQueryIndex, in Simulated simulate) =>
 			{
-				EntityManager.AddComponentData(entity, new CoherenceSimulateComponentLinger());
+				EntityManager.AddComponentData(entity, new LingerSimulated());
 			}).WithStructuralChanges().WithoutBurst().Run();
 			
 			// Keep track of locally destroyed entities so that SyncReceiveSystem does not revive them
 			var commandBuffer = World.GetExistingSystem<EndSimulationEntityCommandBufferSystem>().CreateCommandBuffer();
-			Entities.WithNone<CoherenceSimulateComponent>().ForEach((Entity entity, int entityInQueryIndex, in CoherenceSimulateComponentLinger sync) =>
+			Entities.WithNone<Simulated>().ForEach((Entity entity, int entityInQueryIndex, in LingerSimulated sync) =>
 			{
 				destroyedEntities.TryAdd(entity, new DetectedEntityDeletion { Entity = entity, simulationFrame = simulationFrame, serialized = false });
-				commandBuffer.RemoveComponent<CoherenceSimulateComponentLinger>(entity);
+				commandBuffer.RemoveComponent<LingerSimulated>(entity);
 			}).WithoutBurst().Run();
 			
 			// Clear entities that were locally destroyed over 10s ago, to prevent hashmap from overflowing  
@@ -3465,8 +3464,6 @@ namespace Coherence.Generated.Internal.FirstProject
 			    }
             }
 
-            var log = new Log(new UnityLogger(LogLevel.Debug));
-
             var burstSender = cachedSender;
             var mapper = cachedSender.Mapper;
 
@@ -3488,7 +3485,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
                         EntityIdSerializer.Serialize(coherenceEntityId, bitStream);
 
-                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, log);
+                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, null);
 
                         // --------- Type Specific Part ---------------
                         ComponentTypeIdSerializer.Serialize(TypeIds.InternalBam, bitStream);
@@ -3519,7 +3516,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
                         EntityIdSerializer.Serialize(coherenceEntityId, bitStream);
 
-                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, log);
+                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, null);
 
                         // --------- Type Specific Part ---------------
                         ComponentTypeIdSerializer.Serialize(TypeIds.InternalBom, bitStream);
@@ -3550,7 +3547,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
                         EntityIdSerializer.Serialize(coherenceEntityId, bitStream);
 
-                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, log);
+                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream, null);
 
                         // --------- Type Specific Part ---------------
                         ComponentTypeIdSerializer.Serialize(TypeIds.InternalBim, bitStream);
