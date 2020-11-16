@@ -20,7 +20,7 @@ class DoitSystem : SystemBase
             for (var i = 0; i < doitCommands.Length; i++)
             {
                 var doitCommand = doitCommands[i];
-                Debug.Log($"Got a Doit command with the number {doitCommand.number} and the text '{doitCommand.text}'.");
+                Debug.Log($"Got a Doit command with the number {doitCommand.number}, {doitCommand.fnum}, {doitCommand.b}, {doitCommand.v3}, {doitCommand.v2}, {doitCommand.rot}, {doitCommand.e}, and the text '{doitCommand.text}'.");
             }
 
             buffer.Clear();

@@ -6,4 +6,10 @@ component Player
 
 command Doit
   number Int
+  fnum Float
+  b Bool
+  v3 Vector3
+  v2 Vector2
+  rot Quaternion
+  e Entity
   text String64

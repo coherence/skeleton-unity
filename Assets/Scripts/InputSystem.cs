@@ -38,10 +38,18 @@ class InputSystem : SystemBase
                 UnityEngine.Debug.Log($"Adding command to: {entity}");
 
                 var doitRequestBuffer = EntityManager.GetBuffer<DoitRequest>(entity);
-                doitRequestBuffer.Add(new DoitRequest {
-                        number = counter++,
-                        text = "Håre's π " + counter.ToString() + "!"
-                    });
+                var r = new DoitRequest {
+                        number = _counter++,
+                        fnum = 12.34f,
+                        b = true,
+                        v3 = new float3(1, 2, 3),
+                        v2 = new float2(100, 200),
+                        rot = math.quaternion(1, 2, 3, 4),
+                        e = entity,
+                        text = "Håre's π " + _counter.ToString() + "!"
+                };
+                doitRequestBuffer.Add(r);
+                Debug.Log($"SENDING a Doit command with the number {r.number}, {r.fnum}, {r.b}, {r.v3}, {r.v2}, {r.rot}, {r.e}, and the text '{r.text}'.");
             }).WithStructuralChanges().WithoutBurst().Run();
         }
 
@@ -55,12 +63,12 @@ class InputSystem : SystemBase
             {
                 var doitRequestBuffer = EntityManager.GetBuffer<DoitRequest>(entity);
                 doitRequestBuffer.Add(new DoitRequest {
-                        number = counter++,
+                        number = _counter++,
                         text = "x"
                     });
             }).WithStructuralChanges().WithoutBurst().Run();
         }
     }
 
-    static int counter = 0;
+    static int _counter = 0;
 }
