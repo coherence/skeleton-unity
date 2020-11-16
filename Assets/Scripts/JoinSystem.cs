@@ -12,7 +12,7 @@ class JoinSystem : SystemBase
     protected override void OnStartRunning()
     {
         var networkSystem = World.GetExistingSystem<NetworkSystem>();
-        networkSystem.Connect("127.0.0.1:12345");
+        networkSystem.Connect("127.0.0.1:32001");
     }
 
     protected override void OnUpdate()
@@ -37,7 +37,7 @@ class JoinSystem : SystemBase
     {
         var worldQueryEntity = EntityManager.CreateEntity();
 
-        EntityManager.AddComponentData(worldQueryEntity, new CoherenceSimulateComponent
+        EntityManager.AddComponentData(worldQueryEntity, new Simulated
         {
 
         });
@@ -60,21 +60,21 @@ class JoinSystem : SystemBase
         });
 
         // This component makes us responsible for the simulation of the Entity.
-        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSimulateComponent
+        EntityManager.AddComponentData(newPlayerEntity, new Simulated
         {
 
         });
 
         // This component makes the Entity disappear if we log out or disconnect.
-        EntityManager.AddComponentData(newPlayerEntity, new CoherenceSessionComponent
+        EntityManager.AddComponentData(newPlayerEntity, new SessionBased
         {
 
         });
 
         // This component makes our keyboard input affect the Entity.
-        EntityManager.AddComponentData(newPlayerEntity, new Input
+        EntityManager.AddComponentData(newPlayerEntity, new PlayerInput
         {
-            Value = new float2()
+
         });
 
         // Set a random starting position.

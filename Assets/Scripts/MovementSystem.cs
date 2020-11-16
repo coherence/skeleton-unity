@@ -11,7 +11,7 @@ class MovementSystem : SystemBase
     {
         var dt = Time.DeltaTime;
 
-        Entities.ForEach((ref Translation translation, in Input input) =>
+        Entities.ForEach((ref Translation translation, in PlayerInput input) =>
         {
             var movement = new float3(input.Value.x * speed * dt,
                                       0f,
