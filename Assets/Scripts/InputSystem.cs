@@ -48,7 +48,7 @@ class InputSystem : SystemBase
 
     void AddEvent(int type)
     {
-        Entities.WithAll<CoherenceSimulateComponent>()
+        Entities.WithAll<Simulated>()
                 .ForEach((Entity localPlayer, in Player player) =>
                 {
                     var randomStrength = UnityEngine.Random.Range(0, 1000);
