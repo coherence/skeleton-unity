@@ -2042,10 +2042,7 @@ namespace Coherence.Generated.Internal.FirstProject
                         {
                             return;
                         }
-                        var rawArray = buffer.Reinterpret<HahaRequest>();
                         
-                        Debug.LogWarning($"I will send {rawArray.Length} HahaRequest commands to entity: {entity}");
-
                         var foundEntity = mapper.ToCoherenceEntityId(entity, out var coherenceEntityId);
                         if (!foundEntity)
                         {
@@ -2053,7 +2050,9 @@ namespace Coherence.Generated.Internal.FirstProject
 	                        return;
                         }
                         
-						for (var i=0; i<rawArray.Length; i++)
+                        var rawArray = buffer.Reinterpret<HahaRequest>();
+
+                        for (var i=0; i<rawArray.Length; i++)
                         {
 	                        var item = rawArray[i];
 	                        var octetStream = new OctetWriter(512);
@@ -2072,7 +2071,7 @@ namespace Coherence.Generated.Internal.FirstProject
                         }
 
                         buffer.Clear();
-					}).WithoutBurst().Run();
+                    }).WithoutBurst().Run();
 #endregion
 
 
@@ -3470,7 +3469,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
             // Bam
             Entities
-                .WithAll<CoherenceSimulateComponent>()
+                .WithAll<Simulated>()
                 .ForEach((Entity entity, in Bam eventComponent) =>
                     {
                         var foundEntity = mapper.ToCoherenceEntityId(entity, out var coherenceEntityId);
@@ -3501,7 +3500,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
             // Bom
             Entities
-                .WithAll<CoherenceSimulateComponent>()
+                .WithAll<Simulated>()
                 .ForEach((Entity entity, in Bom eventComponent) =>
                     {
                         var foundEntity = mapper.ToCoherenceEntityId(entity, out var coherenceEntityId);
@@ -3532,7 +3531,7 @@ namespace Coherence.Generated.Internal.FirstProject
 
             // Bim
             Entities
-                .WithAll<CoherenceSimulateComponent>()
+                .WithAll<Simulated>()
                 .ForEach((Entity entity, in Bim eventComponent) =>
                     {
                         var foundEntity = mapper.ToCoherenceEntityId(entity, out var coherenceEntityId);
@@ -3665,7 +3664,7 @@ namespace Coherence.Generated.Internal.FirstProject
 					var eventData = new Bam();
 					messageDeserializers.Bam(bitStream, ref eventData);                    
 
-                    if(!mgr.HasComponent<CoherenceSimulateComponent>(entity))
+                    if(!mgr.HasComponent<Simulated>(entity))
                     {
                         // Only add events on Entities we don't own
                         UnityEngine.Debug.Log($"Adding an event on {entity}: {eventData}");
@@ -3680,7 +3679,7 @@ namespace Coherence.Generated.Internal.FirstProject
 					var eventData = new Bom();
 					messageDeserializers.Bom(bitStream, ref eventData);                    
 
-                    if(!mgr.HasComponent<CoherenceSimulateComponent>(entity))
+                    if(!mgr.HasComponent<Simulated>(entity))
                     {
                         // Only add events on Entities we don't own
                         UnityEngine.Debug.Log($"Adding an event on {entity}: {eventData}");
@@ -3695,7 +3694,7 @@ namespace Coherence.Generated.Internal.FirstProject
 					var eventData = new Bim();
 					messageDeserializers.Bim(bitStream, ref eventData);                    
 
-                    if(!mgr.HasComponent<CoherenceSimulateComponent>(entity))
+                    if(!mgr.HasComponent<Simulated>(entity))
                     {
                         // Only add events on Entities we don't own
                         UnityEngine.Debug.Log($"Adding an event on {entity}: {eventData}");
