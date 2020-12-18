@@ -4,7 +4,6 @@ using Unity.Mathematics;
 using Unity.Rendering;
 using Coherence.Replication.Client.Unity.Ecs;
 using Coherence.Generated.FirstProject;
-using Coherence.Generated.Internal.FirstProject;
 
 [AlwaysUpdateSystem]
 class JoinSystem : SystemBase
