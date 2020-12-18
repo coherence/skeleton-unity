@@ -1,4 +1,4 @@
-# skeleton-unity
+# Starter Project Unity (ECS version)
 
 This is a starting point to quickly get a [coherence](https://coherence.io) project up and running.
 
