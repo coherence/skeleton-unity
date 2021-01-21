@@ -17,5 +17,6 @@ MonoBehaviour:
   frequency: 60
   schemaBakeFolderGuid: 99a50a20117094acc9c8e91a1e61cb41
   schemaBakeGenerateAsmdef: 0
+  useToolkit: 0
   activeSchemas:
   - {fileID: -1758743643018166929, guid: 53daa411b16274e88a08f601c21d8ca6, type: 3}

@@ -6,11 +6,11 @@
 //  DetectCommandSent.cs
 // -----------------------------------
 			
-namespace Coherence.Generated.Internal.Toolkit
+namespace Coherence.Generated.Internal
 {
     using UnityEngine;
     using Unity.Entities;
-    using global::Coherence.Generated.FirstProject;
+    using global::Coherence.Generated;
 
     using Message;
     using Message.Serializer.Serialize;
@@ -57,10 +57,10 @@ namespace Coherence.Generated.Internal.Toolkit
 
 
 
-#region GenericCommandRequest
-			// ------------  GenericCommandRequest --------------
+#region AuthorityTransferRequest
+			// ------------  AuthorityTransferRequest --------------
             Entities
-                .ForEach((Entity entity, DynamicBuffer<GenericCommandRequest> buffer) =>
+                .ForEach((Entity entity, DynamicBuffer<AuthorityTransferRequest> buffer) =>
                     {
                         if (buffer.Length == 0)
                         {
@@ -74,7 +74,7 @@ namespace Coherence.Generated.Internal.Toolkit
 	                        return;
                         }
                         
-                        var rawArray = buffer.Reinterpret<GenericCommandRequest>();
+                        var rawArray = buffer.Reinterpret<AuthorityTransferRequest>();
 
                         for (var i=0; i<rawArray.Length; i++)
                         {
@@ -85,8 +85,8 @@ namespace Coherence.Generated.Internal.Toolkit
 	                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream);
 
 	                        // --------- Type Specific Part ---------------
-	                        ComponentTypeIdSerializer.Serialize(TypeIds.InternalGenericCommand, bitStream);
-	                        messageSerializers.GenericCommandRequest(protocol, item);
+	                        ComponentTypeIdSerializer.Serialize(TypeIds.InternalAuthorityTransfer, bitStream);
+	                        messageSerializers.AuthorityTransferRequest(protocol, item);
 	                        // --------------------------------------------
 
 	                        bitStream.Flush();

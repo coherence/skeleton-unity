@@ -3,7 +3,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.Rendering;
 using Coherence.Replication.Client.Unity.Ecs;
-using Coherence.Generated.FirstProject;
+using Coherence.Generated;
 
 [AlwaysUpdateSystem]
 class JoinSystem : SystemBase
