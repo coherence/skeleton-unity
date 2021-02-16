@@ -38,6 +38,29 @@ namespace Coherence.Generated
 
 		private static void CopyComponents(EntityManager entityManager, Entity source, Entity destination)
 		{
+			/////////////////////////////////////////////////////////////
+			// Copy SDK components 
+			// Simulated and Orphan are defined in the SDK, 
+			// and should be copied similar to schema components below
+			/////////////////////////////////////////////////////////////
+
+			if(entityManager.HasComponent<Simulated>(source))
+			{
+				if(!entityManager.HasComponent<Simulated>(destination)) {
+					entityManager.AddComponentData<Simulated>(destination, new Simulated());
+				}
+				var data = entityManager.GetComponentData<Simulated>(source);
+				entityManager.SetComponentData<Simulated>(destination, data);
+			}
+		
+			if(entityManager.HasComponent<Orphan>(source))
+			{
+				entityManager.AddComponentData<Orphan>(destination, new Orphan());
+			}
+
+			/////////////////////////////////////////////////////////////
+			// Copy schema components
+			/////////////////////////////////////////////////////////////
 		
             if(entityManager.HasComponent<Translation>(source))
 			{

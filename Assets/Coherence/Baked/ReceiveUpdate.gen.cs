@@ -159,7 +159,7 @@ namespace Coherence.Generated.Internal
 
 			while (deserializeEntity.ReadEntity(bitStream, out var entityWithMeta))
 			{
-				var entity = mapper.ToUnityEntity(entityWithMeta.EntityId, false);
+				var entity = mapper.ToUnityEntity(entityWithMeta.EntityId);
 
 				// Skip locally destroyed entities
 				if (destroyedEntities.ContainsKey(entity))
@@ -201,18 +201,17 @@ namespace Coherence.Generated.Internal
 
 		private Entity PerformEntityMetaUpdate(EntityManager entityManager, Deserializator.EntityWithMeta entityWithMeta, Entity entity)
 		{
-			// Entities are CREATED implicitly if they do not exist
-			if (entity == default || !entityManager.Exists(entity))
+			// Log a warning and remove mapping if an entity has been destroyed locally
+			if (entity != default && !entityManager.Exists(entity))
 			{
-				if (entity != default)
-				{
-					UnityEngine.Debug.LogWarning("entity might still be mapped: " + entity + " CID: " + entityWithMeta.EntityId);
-				}
-				if (mapper.IsEntityIdInUse(entityWithMeta.EntityId))
-				{
-					UnityEngine.Debug.LogWarning("entity index already in use: " + entityWithMeta.EntityId);
-					return default;
-				}
+				UnityEngine.Debug.LogWarning($"{entity} does not exist, did you destroy a non-simulated entity?");
+				entity = default;
+				mapper.Remove(entityWithMeta.EntityId);
+			}
+
+			// Entities are CREATED implicitly if they do not exist
+			if (entity == default)
+			{
 				entity = entityManager.CreateEntity();
 				mapper.Add(entityWithMeta.EntityId, entity);
 				entityManager.AddComponent<Mapped>(entity);
@@ -225,11 +224,23 @@ namespace Coherence.Generated.Internal
 				entityManager.RemoveComponent<Simulated>(entity);
 				entityManager.RemoveComponent<LingerSimulated>(entity);
 				RemoveSyncComponents(entityManager, entity);
+				AddCommandBuffers(entityManager, entity);
 			}
 			else if (!hasComponentData && entityWithMeta.Ownership)
 			{
 				entityManager.AddComponentData(entity, new Simulated());
 				RemoveInterpolationComponents(entityManager, entity);
+			}
+
+			// Entities IsOrphan determines iff they should have Orphan
+			var hasOrphanComponent = entityManager.HasComponent<Orphan>(entity);
+			if (hasOrphanComponent && !entityWithMeta.IsOrphan)
+			{
+				entityManager.RemoveComponent<Orphan>(entity);
+			}
+			else if (!hasOrphanComponent && entityWithMeta.IsOrphan)
+			{
+				entityManager.AddComponentData(entity, new Orphan());
 			}
 
 			// Entities are DELETED explicitly by the IsDeleted flag
@@ -270,6 +281,12 @@ namespace Coherence.Generated.Internal
 		public void UpdateResendMask(EntityManager entityManager, Coherence.Ecs.SerializeEntityID entityId, uint componentTypeId, uint fieldMask)
 		{
 			var entity = mapper.ToUnityEntity(entityId);
+
+			if (!entityManager.Exists(entity))
+			{
+				Log.Warning($"Entity does not exist: {entity} ComponentTypeId: {componentTypeId}");
+				return;
+			}
 
 			switch (componentTypeId)
 			{
@@ -396,7 +413,7 @@ namespace Coherence.Generated.Internal
 
 		public void UpdateHasReceivedConstructor(EntityManager entityManager, Coherence.Ecs.SerializeEntityID entityId, uint componentTypeId)
 		{
-			var entity = mapper.ToUnityEntity(entityId, false);
+			var entity = mapper.ToUnityEntity(entityId);
 
 			// The entity has been deleted since the packet was sent
 			if (destroyedEntities.ContainsKey(entity))
@@ -545,7 +562,7 @@ namespace Coherence.Generated.Internal
 
 		public void UpdateResendDestroyed(EntityManager entityManager, Coherence.Ecs.SerializeEntityID entityId, AbsoluteSimulationFrame simulationFrame)
 		{
-			var entity = mapper.ToUnityEntity(entityId, false);
+			var entity = mapper.ToUnityEntity(entityId);
 			if (entity == default)
 			{
 				Log.Warning($"Destroyed entity {entityId} missing from mapper");
@@ -594,6 +611,27 @@ namespace Coherence.Generated.Internal
 				entityManager.RemoveComponent<Player_Sync>(entity);
 			}
 
+		}
+
+		private void AddCommandBuffers(EntityManager entityManager, Entity entity)
+		{
+#region Commands
+
+			{
+				var hasBuffer = entityManager.HasComponent<AuthorityTransfer>(entity);
+				if (!hasBuffer)
+				{
+					entityManager.AddBuffer<AuthorityTransfer>(entity);
+				}
+
+				var hasRequestBuffer = entityManager.HasComponent<AuthorityTransferRequest>(entity);
+				if (!hasRequestBuffer)
+				{
+					entityManager.AddBuffer<AuthorityTransferRequest>(entity);
+				}
+			}
+
+#endregion
 		}
 
 		private void RemoveInterpolationComponents(EntityManager entityManager, Entity entity)

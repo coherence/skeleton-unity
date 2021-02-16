@@ -85,7 +85,7 @@ public class UnityReaders
 
 		if (bitstream.ReadMask()) 
 		{
-			var coherenceField = bitstream.ReadFixedPoint(24, 40000);
+			var coherenceField = bitstream.ReadFixedPoint(24, 2400);
 			     data.radius = coherenceToUnityConverters.ToUnityfloat(coherenceField);
 			propertyMask |= 0b00000000000000000000000000000010;
 		}

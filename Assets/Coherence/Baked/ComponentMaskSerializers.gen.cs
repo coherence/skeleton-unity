@@ -87,7 +87,7 @@ namespace Coherence.Generated.Internal
 			{
 				
 					var v = coherenceToUnityConverters.FromUnityfloat(data.radius);
-					bitstream.WriteFixedPoint(v, 24, 40000);
+					bitstream.WriteFixedPoint(v, 24, 2400);
 				
 			}
 			propertyMask >>= 1;

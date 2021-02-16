@@ -62,7 +62,7 @@ public class MessageDeserializers
 			
 
 			
-				var radius = bitstream.ReadFixedPoint(24, 40000);
+				var radius = bitstream.ReadFixedPoint(24, 2400);
 				data.radius = coherenceToUnityConverters.ToUnityfloat(radius);
 			
      
@@ -92,6 +92,19 @@ public class MessageDeserializers
 
 			
 				data.participant =  bitstream.ReadIntegerRange(15, -9999);
+			
+     
+	}
+
+	public void TransferAction(IInBitStream bitstream, ref TransferAction data)
+	{
+
+			
+				data.participant =  bitstream.ReadIntegerRange(15, -9999);
+			
+
+			
+				data.accepted =  bitstream.ReadBool();
 			
      
 	}

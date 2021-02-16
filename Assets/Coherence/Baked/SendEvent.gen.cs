@@ -56,6 +56,37 @@ namespace Coherence.Generated.Internal
             var mapper = cachedSender.Mapper;
 
 
+            // TransferAction
+            Entities
+                .WithAll<Simulated>()
+                .ForEach((Entity entity, in TransferAction eventComponent) =>
+                    {
+                        var foundEntity = mapper.ToCoherenceEntityId(entity, out var coherenceEntityId);
+                        if (!foundEntity)
+                        {
+                            Debug.LogError($"sending event, but can't find entity {entity} in coherence mapper");
+                            return;
+                        }
+
+                        var octetStream = new OctetWriter(512); // THIS MAGIC NUMBER IS TAKEN FROM COMMANDS CODE, HMM?!!
+                        var bitStream = new OutBitStream(octetStream);
+
+                        EntityIdSerializer.Serialize(coherenceEntityId, bitStream);
+
+                        var protocol = new Coherence.FieldStream.Serialize.Streams.OutBitStream(bitStream);
+
+                        // --------- Type Specific Part ---------------
+                        ComponentTypeIdSerializer.Serialize(TypeIds.InternalTransferAction, bitStream);
+                        messageSerializers.TransferAction(protocol, eventComponent);
+                        // --------------------------------------------
+
+                        bitStream.Flush();
+                        var payload = new BitSerializedMessage(octetStream.Octets, bitStream.Tell);
+                        burstSender.MessageChannels.PushEntityEvent(payload);
+
+                        UnityEngine.Debug.Log("Will send TransferAction Event");
+					}).WithoutBurst().Run();
+
 
         }
     }

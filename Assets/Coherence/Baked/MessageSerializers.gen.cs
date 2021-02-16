@@ -63,7 +63,7 @@ public class MessageSerializers
 
 			
 				var converted_radius = coherenceToUnityConverters.FromUnityfloat(data.radius);
-				bitstream.WriteFixedPoint(converted_radius, 24, 40000);
+				bitstream.WriteFixedPoint(converted_radius, 24, 2400);
 			
 
 	}
@@ -92,6 +92,19 @@ public class MessageSerializers
 
 			
 				bitstream.WriteIntegerRange(data.participant, 15, -9999);
+			
+
+	}
+
+	public void TransferAction(IOutBitStream bitstream, TransferAction data)
+	{
+
+			
+				bitstream.WriteIntegerRange(data.participant, 15, -9999);
+			
+
+			
+				bitstream.WriteBool(data.accepted);
 			
 
 	}

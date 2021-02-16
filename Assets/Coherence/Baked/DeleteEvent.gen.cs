@@ -22,6 +22,15 @@ namespace Coherence.Generated.Internal
 		protected override void OnUpdate()
 		{
 
+			Entities
+			   .WithAll<global::Coherence.Generated.TransferAction>()
+			   .ForEach((Entity entity) =>
+			{
+
+				UnityEngine.Debug.Log("Will delete TransferAction Event component");
+				EntityManager.RemoveComponent<TransferAction>(entity);
+			}).WithStructuralChanges().Run();
+
 			Dependency.Complete();
 		}
 	}

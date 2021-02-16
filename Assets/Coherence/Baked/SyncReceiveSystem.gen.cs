@@ -65,7 +65,7 @@ namespace Coherence.Generated.Internal
 	        Entities.ForEach((in DisconnectedEvent connected) =>
 	        {
 		        // Destroy all networked entities 
-		        World.GetOrCreateSystem<NetworkSystem>().Mapper.ClearAndDestroyEntities();
+		        World.GetOrCreateSystem<NetworkSystem>().Mapper.ClearAndDestroyEntities(EntityManager);
 		        
 		        // Clear the incoming packet repository
 		        receiver.ResetPacketRepository();

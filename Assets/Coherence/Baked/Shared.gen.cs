@@ -35,6 +35,8 @@ static class TypeIds
 
 	public const uint InternalAuthorityTransfer = 0;
 
+	public const uint InternalTransferAction = 0;
+
 }
 
 
@@ -56,6 +58,8 @@ enum TypeEnums
 	InternalPlayer = 6,
 
 	InternalAuthorityTransfer = 0,
+
+	InternalTransferAction = 0,
 
 }
 
