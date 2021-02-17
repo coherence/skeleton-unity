@@ -153,6 +153,27 @@ namespace Coherence.Generated.Internal
                 });
             }).ScheduleParallel();
 
+			Entities.WithNone<global::Coherence.Generated.ArchetypeComponent>().ForEach((Entity entity, ref ArchetypeComponent_Sync sync, in Simulated sim) =>
+            {
+                if (sync.deleteHasBeenSerialized)
+                {
+                    return;
+                }
+                
+                if (sync.deletedAtTime == default)
+                {
+                    sync.deletedAtTime = (long)simulationFrame;
+                }
+
+                localComponentChanges.Add(sync.accumulatedPriority, new ComponentChange
+                {
+                    entity = entity,
+                    componentType = TypeIds.InternalArchetypeComponent,
+                    mask = 0,
+                    resendMask = 0,
+                });
+            }).ScheduleParallel();
+
 			Entities.WithNone<global::Coherence.Generated.Player>().ForEach((Entity entity, ref Player_Sync sync, in Simulated sim) =>
             {
                 if (sync.deleteHasBeenSerialized)
@@ -169,6 +190,69 @@ namespace Coherence.Generated.Internal
                 {
                     entity = entity,
                     componentType = TypeIds.InternalPlayer,
+                    mask = 0,
+                    resendMask = 0,
+                });
+            }).ScheduleParallel();
+
+			Entities.WithNone<global::Coherence.Generated.A>().ForEach((Entity entity, ref A_Sync sync, in Simulated sim) =>
+            {
+                if (sync.deleteHasBeenSerialized)
+                {
+                    return;
+                }
+                
+                if (sync.deletedAtTime == default)
+                {
+                    sync.deletedAtTime = (long)simulationFrame;
+                }
+
+                localComponentChanges.Add(sync.accumulatedPriority, new ComponentChange
+                {
+                    entity = entity,
+                    componentType = TypeIds.InternalA,
+                    mask = 0,
+                    resendMask = 0,
+                });
+            }).ScheduleParallel();
+
+			Entities.WithNone<global::Coherence.Generated.B>().ForEach((Entity entity, ref B_Sync sync, in Simulated sim) =>
+            {
+                if (sync.deleteHasBeenSerialized)
+                {
+                    return;
+                }
+                
+                if (sync.deletedAtTime == default)
+                {
+                    sync.deletedAtTime = (long)simulationFrame;
+                }
+
+                localComponentChanges.Add(sync.accumulatedPriority, new ComponentChange
+                {
+                    entity = entity,
+                    componentType = TypeIds.InternalB,
+                    mask = 0,
+                    resendMask = 0,
+                });
+            }).ScheduleParallel();
+
+			Entities.WithNone<global::Coherence.Generated.C>().ForEach((Entity entity, ref C_Sync sync, in Simulated sim) =>
+            {
+                if (sync.deleteHasBeenSerialized)
+                {
+                    return;
+                }
+                
+                if (sync.deletedAtTime == default)
+                {
+                    sync.deletedAtTime = (long)simulationFrame;
+                }
+
+                localComponentChanges.Add(sync.accumulatedPriority, new ComponentChange
+                {
+                    entity = entity,
+                    componentType = TypeIds.InternalC,
                     mask = 0,
                     resendMask = 0,
                 });

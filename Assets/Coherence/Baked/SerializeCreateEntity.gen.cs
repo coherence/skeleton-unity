@@ -79,10 +79,38 @@ namespace Coherence.Generated.Internal
 						break;
 					}
 					
+                    case TypeIds.InternalArchetypeComponent:
+					{
+						var data = entityManager.GetComponentData<ArchetypeComponent>(entity);
+						messageSerializers.ArchetypeComponent(protocolOutStream, data);
+						break;
+					}
+					
                     case TypeIds.InternalPlayer:
 					{
 						var data = entityManager.GetComponentData<Player>(entity);
 						messageSerializers.Player(protocolOutStream, data);
+						break;
+					}
+					
+                    case TypeIds.InternalA:
+					{
+						var data = entityManager.GetComponentData<A>(entity);
+						messageSerializers.A(protocolOutStream, data);
+						break;
+					}
+					
+                    case TypeIds.InternalB:
+					{
+						var data = entityManager.GetComponentData<B>(entity);
+						messageSerializers.B(protocolOutStream, data);
+						break;
+					}
+					
+                    case TypeIds.InternalC:
+					{
+						var data = entityManager.GetComponentData<C>(entity);
+						messageSerializers.C(protocolOutStream, data);
 						break;
 					}
 					

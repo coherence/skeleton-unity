@@ -141,11 +141,73 @@ namespace Coherence.Generated.Internal
         }
         
 
+        private void SerializeArchetypeComponent(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        {
+
+            // Write component changes to output stream
+            var componentData = EntityManager.GetComponentData<ArchetypeComponent>(entity);
+            unityWriters.Write(componentData, mask, protocolOutStream);
+
+            // Reset accumulated priority so the same component is not sent again next frame
+            var syncData = EntityManager.GetComponentData<ArchetypeComponent_Sync>(entity);
+
+            syncData.accumulatedPriority = 0;
+
+            syncData.lastSentData = componentData;
+
+            syncData.hasBeenSerialized = true;
+            syncData.resendMask &= ~mask;	// Clear serialized fields from resend mask
+            EntityManager.SetComponentData(entity, syncData);
+        }
+        
+
         private void SerializePlayer(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
         {
 
             // Reset accumulated priority so the same component is not sent again next frame
             var syncData = EntityManager.GetComponentData<Player_Sync>(entity);
+
+            syncData.accumulatedPriority = 0;
+
+            syncData.hasBeenSerialized = true;
+            syncData.resendMask &= ~mask;	// Clear serialized fields from resend mask
+            EntityManager.SetComponentData(entity, syncData);
+        }
+        
+
+        private void SerializeA(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        {
+
+            // Reset accumulated priority so the same component is not sent again next frame
+            var syncData = EntityManager.GetComponentData<A_Sync>(entity);
+
+            syncData.accumulatedPriority = 0;
+
+            syncData.hasBeenSerialized = true;
+            syncData.resendMask &= ~mask;	// Clear serialized fields from resend mask
+            EntityManager.SetComponentData(entity, syncData);
+        }
+        
+
+        private void SerializeB(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        {
+
+            // Reset accumulated priority so the same component is not sent again next frame
+            var syncData = EntityManager.GetComponentData<B_Sync>(entity);
+
+            syncData.accumulatedPriority = 0;
+
+            syncData.hasBeenSerialized = true;
+            syncData.resendMask &= ~mask;	// Clear serialized fields from resend mask
+            EntityManager.SetComponentData(entity, syncData);
+        }
+        
+
+        private void SerializeC(EntityManager EntityManager, Entity entity, uint mask, IOutBitStream protocolOutStream)
+        {
+
+            // Reset accumulated priority so the same component is not sent again next frame
+            var syncData = EntityManager.GetComponentData<C_Sync>(entity);
 
             syncData.accumulatedPriority = 0;
 
@@ -185,8 +247,24 @@ namespace Coherence.Generated.Internal
                     SerializeTransferable(entityManager, unityEntity, fieldMask, protocolOutStream);
                     break;
 
+                case TypeIds.InternalArchetypeComponent:
+                    SerializeArchetypeComponent(entityManager, unityEntity, fieldMask, protocolOutStream);
+                    break;
+
                 case TypeIds.InternalPlayer:
                     SerializePlayer(entityManager, unityEntity, fieldMask, protocolOutStream);
+                    break;
+
+                case TypeIds.InternalA:
+                    SerializeA(entityManager, unityEntity, fieldMask, protocolOutStream);
+                    break;
+
+                case TypeIds.InternalB:
+                    SerializeB(entityManager, unityEntity, fieldMask, protocolOutStream);
+                    break;
+
+                case TypeIds.InternalC:
+                    SerializeC(entityManager, unityEntity, fieldMask, protocolOutStream);
                     break;
 
                 default:
@@ -248,9 +326,41 @@ namespace Coherence.Generated.Internal
                     break;
                 }
 
+                case TypeIds.InternalArchetypeComponent:
+                {
+                    var syncData = entityManager.GetComponentData<ArchetypeComponent_Sync>(unityEntity);
+                    syncData.deleteHasBeenSerialized = true;
+                    entityManager.SetComponentData(unityEntity, syncData);
+                    break;
+                }
+
                 case TypeIds.InternalPlayer:
                 {
                     var syncData = entityManager.GetComponentData<Player_Sync>(unityEntity);
+                    syncData.deleteHasBeenSerialized = true;
+                    entityManager.SetComponentData(unityEntity, syncData);
+                    break;
+                }
+
+                case TypeIds.InternalA:
+                {
+                    var syncData = entityManager.GetComponentData<A_Sync>(unityEntity);
+                    syncData.deleteHasBeenSerialized = true;
+                    entityManager.SetComponentData(unityEntity, syncData);
+                    break;
+                }
+
+                case TypeIds.InternalB:
+                {
+                    var syncData = entityManager.GetComponentData<B_Sync>(unityEntity);
+                    syncData.deleteHasBeenSerialized = true;
+                    entityManager.SetComponentData(unityEntity, syncData);
+                    break;
+                }
+
+                case TypeIds.InternalC:
+                {
+                    var syncData = entityManager.GetComponentData<C_Sync>(unityEntity);
                     syncData.deleteHasBeenSerialized = true;
                     entityManager.SetComponentData(unityEntity, syncData);
                     break;

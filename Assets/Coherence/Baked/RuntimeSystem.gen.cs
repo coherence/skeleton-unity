@@ -27,7 +27,11 @@ namespace Coherence.Sdk.Unity
            GlobalLookups.Register<WorldPositionQuery>(TypeEnums.InternalWorldPositionQuery);
            GlobalLookups.Register<SessionBased>(TypeEnums.InternalSessionBased);
            GlobalLookups.Register<Transferable>(TypeEnums.InternalTransferable);
+           GlobalLookups.Register<ArchetypeComponent>(TypeEnums.InternalArchetypeComponent);
            GlobalLookups.Register<Player>(TypeEnums.InternalPlayer);
+           GlobalLookups.Register<A>(TypeEnums.InternalA);
+           GlobalLookups.Register<B>(TypeEnums.InternalB);
+           GlobalLookups.Register<C>(TypeEnums.InternalC);
 
 			#endregion
 
@@ -38,7 +42,11 @@ namespace Coherence.Sdk.Unity
            GlobalTypeIdLookups.Register<WorldPositionQuery>(TypeIds.InternalWorldPositionQuery);
            GlobalTypeIdLookups.Register<SessionBased>(TypeIds.InternalSessionBased);
            GlobalTypeIdLookups.Register<Transferable>(TypeIds.InternalTransferable);
+           GlobalTypeIdLookups.Register<ArchetypeComponent>(TypeIds.InternalArchetypeComponent);
            GlobalTypeIdLookups.Register<Player>(TypeIds.InternalPlayer);
+           GlobalTypeIdLookups.Register<A>(TypeIds.InternalA);
+           GlobalTypeIdLookups.Register<B>(TypeIds.InternalB);
+           GlobalTypeIdLookups.Register<C>(TypeIds.InternalC);
 
 			#endregion
 

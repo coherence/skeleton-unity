@@ -119,7 +119,50 @@ public class UnityReaders
 	}
 
 	
+	public uint Read(ref ArchetypeComponent data, IInBitStream bitstream)
+	{
+		var propertyMask = (uint)0;
+
+
+		if (bitstream.ReadMask()) 
+		{
+			var coherenceField = bitstream.ReadIntegerRange(15, -9999);
+			       data.index = coherenceField;
+			propertyMask |= 0b00000000000000000000000000000001;
+		}
+       
+		return propertyMask;
+	}
+
+	
 	public uint Read(ref Player data, IInBitStream bitstream)
+	{
+		var propertyMask = (uint)0;
+
+       
+		return propertyMask;
+	}
+
+	
+	public uint Read(ref A data, IInBitStream bitstream)
+	{
+		var propertyMask = (uint)0;
+
+       
+		return propertyMask;
+	}
+
+	
+	public uint Read(ref B data, IInBitStream bitstream)
+	{
+		var propertyMask = (uint)0;
+
+       
+		return propertyMask;
+	}
+
+	
+	public uint Read(ref C data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;
 

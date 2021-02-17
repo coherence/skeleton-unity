@@ -82,7 +82,31 @@ public class MessageDeserializers
      
 	}
 
+	public void ArchetypeComponent(IInBitStream bitstream, ref ArchetypeComponent data)
+	{
+
+			
+				data.index =  bitstream.ReadIntegerRange(15, -9999);
+			
+     
+	}
+
 	public void Player(IInBitStream bitstream, ref Player data)
+	{
+     
+	}
+
+	public void A(IInBitStream bitstream, ref A data)
+	{
+     
+	}
+
+	public void B(IInBitStream bitstream, ref B data)
+	{
+     
+	}
+
+	public void C(IInBitStream bitstream, ref C data)
 	{
      
 	}

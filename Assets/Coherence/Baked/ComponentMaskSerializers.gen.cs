@@ -118,7 +118,43 @@ namespace Coherence.Generated.Internal
 
 		
 		
+		public void Write(in ArchetypeComponent data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		{
+	
+			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
+			{
+				
+					bitstream.WriteIntegerRange(data.index, 15, -9999);
+				
+			}
+			propertyMask >>= 1;
+	
+	     }
+
+		
+		
 		public void Write(in Player data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		{
+	
+	     }
+
+		
+		
+		public void Write(in A data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		{
+	
+	     }
+
+		
+		
+		public void Write(in B data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		{
+	
+	     }
+
+		
+		
+		public void Write(in C data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 		{
 	
 	     }

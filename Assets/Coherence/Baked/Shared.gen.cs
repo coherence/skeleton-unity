@@ -31,7 +31,15 @@ static class TypeIds
 
 	public const uint InternalTransferable = 5;
 
-	public const uint InternalPlayer = 6;
+	public const uint InternalArchetypeComponent = 6;
+
+	public const uint InternalPlayer = 7;
+
+	public const uint InternalA = 8;
+
+	public const uint InternalB = 9;
+
+	public const uint InternalC = 10;
 
 	public const uint InternalAuthorityTransfer = 0;
 
@@ -55,7 +63,15 @@ enum TypeEnums
 
 	InternalTransferable = 5,
 
-	InternalPlayer = 6,
+	InternalArchetypeComponent = 6,
+
+	InternalPlayer = 7,
+
+	InternalA = 8,
+
+	InternalB = 9,
+
+	InternalC = 10,
 
 	InternalAuthorityTransfer = 0,
 

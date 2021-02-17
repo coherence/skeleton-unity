@@ -171,6 +171,28 @@ namespace Coherence.Generated.Internal
 
 		}
 
+        private void DeserializeArchetypeComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        {
+
+            // If we own the entity, don't overwrite with downstream data from server
+            // TODO: Server should never send downstream to the simulating client
+            if (componentOwnership)
+	        {
+	            // Read and discard data (the stream must always be read) 
+	            var temp = new ArchetypeComponent();
+				unityReaders.Read(ref temp, protocolStream);
+				return;
+            }
+            
+    
+			// Overwrite components that don't use interpolation
+			var componentData = entityManager.GetComponentData<ArchetypeComponent>(entity);
+			unityReaders.Read(ref componentData, protocolStream);
+			entityManager.SetComponentData(entity, componentData);
+    
+
+		}
+
         private void DeserializePlayer(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
@@ -178,6 +200,39 @@ namespace Coherence.Generated.Internal
             if (!entityManager.HasComponent<Player>(entity))
 		    {
 				entityManager.AddComponent<Player>(entity);
+			}
+
+		}
+
+        private void DeserializeA(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        {
+
+			// No need to read empty components, just ensure that it's there
+            if (!entityManager.HasComponent<A>(entity))
+		    {
+				entityManager.AddComponent<A>(entity);
+			}
+
+		}
+
+        private void DeserializeB(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        {
+
+			// No need to read empty components, just ensure that it's there
+            if (!entityManager.HasComponent<B>(entity))
+		    {
+				entityManager.AddComponent<B>(entity);
+			}
+
+		}
+
+        private void DeserializeC(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        {
+
+			// No need to read empty components, just ensure that it's there
+            if (!entityManager.HasComponent<C>(entity))
+		    {
+				entityManager.AddComponent<C>(entity);
 			}
 
 		}
@@ -221,8 +276,24 @@ namespace Coherence.Generated.Internal
 				DeserializeTransferable(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
+			case TypeIds.InternalArchetypeComponent:
+				DeserializeArchetypeComponent(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+				break;
+				
 			case TypeIds.InternalPlayer:
 				DeserializePlayer(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+				break;
+				
+			case TypeIds.InternalA:
+				DeserializeA(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+				break;
+				
+			case TypeIds.InternalB:
+				DeserializeB(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+				break;
+				
+			case TypeIds.InternalC:
+				DeserializeC(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
 
@@ -345,6 +416,21 @@ namespace Coherence.Generated.Internal
                     break;
 				}
 
+				case TypeIds.InternalArchetypeComponent:
+                {
+                    var justCreated = false;
+                    var hasComponentData = entityManager.HasComponent<ArchetypeComponent>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<ArchetypeComponent_Sync>(entity) && entityManager.GetComponentData<ArchetypeComponent_Sync>(entity).deletedAtTime > 0;
+                    if (!hasComponentData && !componentHasBeenRemoved)
+                    {
+                        entityManager.AddComponentData(entity, new ArchetypeComponent());
+                        justCreated = true;
+                    }
+
+                    ReadComponentDataUpdateEx(entityManager, entity, componentType, simulationFrame, bitStream, justCreated);
+                    break;
+				}
+
 				case TypeIds.InternalPlayer:
                 {
                     var justCreated = false;
@@ -353,6 +439,51 @@ namespace Coherence.Generated.Internal
                     if (!hasComponentData && !componentHasBeenRemoved)
                     {
                         entityManager.AddComponentData(entity, new Player());
+                        justCreated = true;
+                    }
+
+                    ReadComponentDataUpdateEx(entityManager, entity, componentType, simulationFrame, bitStream, justCreated);
+                    break;
+				}
+
+				case TypeIds.InternalA:
+                {
+                    var justCreated = false;
+                    var hasComponentData = entityManager.HasComponent<A>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<A_Sync>(entity) && entityManager.GetComponentData<A_Sync>(entity).deletedAtTime > 0;
+                    if (!hasComponentData && !componentHasBeenRemoved)
+                    {
+                        entityManager.AddComponentData(entity, new A());
+                        justCreated = true;
+                    }
+
+                    ReadComponentDataUpdateEx(entityManager, entity, componentType, simulationFrame, bitStream, justCreated);
+                    break;
+				}
+
+				case TypeIds.InternalB:
+                {
+                    var justCreated = false;
+                    var hasComponentData = entityManager.HasComponent<B>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<B_Sync>(entity) && entityManager.GetComponentData<B_Sync>(entity).deletedAtTime > 0;
+                    if (!hasComponentData && !componentHasBeenRemoved)
+                    {
+                        entityManager.AddComponentData(entity, new B());
+                        justCreated = true;
+                    }
+
+                    ReadComponentDataUpdateEx(entityManager, entity, componentType, simulationFrame, bitStream, justCreated);
+                    break;
+				}
+
+				case TypeIds.InternalC:
+                {
+                    var justCreated = false;
+                    var hasComponentData = entityManager.HasComponent<C>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<C_Sync>(entity) && entityManager.GetComponentData<C_Sync>(entity).deletedAtTime > 0;
+                    if (!hasComponentData && !componentHasBeenRemoved)
+                    {
+                        entityManager.AddComponentData(entity, new C());
                         justCreated = true;
                     }
 

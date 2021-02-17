@@ -53,8 +53,37 @@ namespace Coherence.Generated
 	
 	
 	
+	// EcsComponentData: InternalArchetypeComponentData
+	public struct ArchetypeComponent : IComponentData
+	{
+		public int index;
+	}
+	
+	
+	
 	// EcsComponentData: InternalPlayerData
 	public struct Player : IComponentData
+	{
+	}
+	
+	
+	
+	// EcsComponentData: InternalAData
+	public struct A : IComponentData
+	{
+	}
+	
+	
+	
+	// EcsComponentData: InternalBData
+	public struct B : IComponentData
+	{
+	}
+	
+	
+	
+	// EcsComponentData: InternalCData
+	public struct C : IComponentData
 	{
 	}
 	

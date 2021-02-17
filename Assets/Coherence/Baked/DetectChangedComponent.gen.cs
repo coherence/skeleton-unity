@@ -319,6 +319,47 @@ namespace Coherence.Generated.Internal
             }).ScheduleParallel();
 
 
+            Entities.ForEach((Entity entity, ref ArchetypeComponent_Sync sync, in global::Coherence.Generated.ArchetypeComponent data, in Simulated simulate) =>
+            {
+                uint mask = 0;
+                if (!sync.hasBeenSerialized)
+                {
+                    mask = 0xffffffff;
+                }
+
+
+                if (data.index != sync.lastSentData.index) mask |= 0b00000000000000000000000000000001;
+
+
+
+                if (mask != 0 || sync.resendMask != 0)
+                {
+                    
+                    
+                    
+                    
+                    CheckRange(data.index, CoherenceLimits.ArchetypeComponent_index_Min, CoherenceLimits.ArchetypeComponent_index_Max);
+                    
+                    
+                    
+                    
+
+                    sync.accumulatedPriority += sync.howImportantAreYou;
+                    var componentChange = new ComponentChange
+                    {
+                        entity = entity,
+                        componentType = TypeIds.InternalArchetypeComponent,
+                        mask = mask,
+                        resendMask = sync.resendMask,
+                        entityHasReceivedConstructor = simulate.hasReceivedConstructor,
+                        componentHasReceivedConstructor = sync.hasReceivedConstructor,
+                    };
+
+                    localComponentChanges.Add(sync.accumulatedPriority, componentChange);
+                }
+            }).ScheduleParallel();
+
+
             Entities.ForEach((Entity entity, ref Player_Sync sync, in global::Coherence.Generated.Player data, in Simulated simulate) =>
             {
                 uint mask = 0;
@@ -337,6 +378,93 @@ namespace Coherence.Generated.Internal
                     {
                         entity = entity,
                         componentType = TypeIds.InternalPlayer,
+                        mask = mask,
+                        resendMask = sync.resendMask,
+                        entityHasReceivedConstructor = simulate.hasReceivedConstructor,
+                        componentHasReceivedConstructor = sync.hasReceivedConstructor,
+                    };
+
+                    localComponentChanges.Add(sync.accumulatedPriority, componentChange);
+                }
+            }).ScheduleParallel();
+
+
+            Entities.ForEach((Entity entity, ref A_Sync sync, in global::Coherence.Generated.A data, in Simulated simulate) =>
+            {
+                uint mask = 0;
+                if (!sync.hasBeenSerialized)
+                {
+                    mask = 0xffffffff;
+                }
+
+
+                if (mask != 0 || sync.resendMask != 0)
+                {
+                    
+
+                    sync.accumulatedPriority += sync.howImportantAreYou;
+                    var componentChange = new ComponentChange
+                    {
+                        entity = entity,
+                        componentType = TypeIds.InternalA,
+                        mask = mask,
+                        resendMask = sync.resendMask,
+                        entityHasReceivedConstructor = simulate.hasReceivedConstructor,
+                        componentHasReceivedConstructor = sync.hasReceivedConstructor,
+                    };
+
+                    localComponentChanges.Add(sync.accumulatedPriority, componentChange);
+                }
+            }).ScheduleParallel();
+
+
+            Entities.ForEach((Entity entity, ref B_Sync sync, in global::Coherence.Generated.B data, in Simulated simulate) =>
+            {
+                uint mask = 0;
+                if (!sync.hasBeenSerialized)
+                {
+                    mask = 0xffffffff;
+                }
+
+
+                if (mask != 0 || sync.resendMask != 0)
+                {
+                    
+
+                    sync.accumulatedPriority += sync.howImportantAreYou;
+                    var componentChange = new ComponentChange
+                    {
+                        entity = entity,
+                        componentType = TypeIds.InternalB,
+                        mask = mask,
+                        resendMask = sync.resendMask,
+                        entityHasReceivedConstructor = simulate.hasReceivedConstructor,
+                        componentHasReceivedConstructor = sync.hasReceivedConstructor,
+                    };
+
+                    localComponentChanges.Add(sync.accumulatedPriority, componentChange);
+                }
+            }).ScheduleParallel();
+
+
+            Entities.ForEach((Entity entity, ref C_Sync sync, in global::Coherence.Generated.C data, in Simulated simulate) =>
+            {
+                uint mask = 0;
+                if (!sync.hasBeenSerialized)
+                {
+                    mask = 0xffffffff;
+                }
+
+
+                if (mask != 0 || sync.resendMask != 0)
+                {
+                    
+
+                    sync.accumulatedPriority += sync.howImportantAreYou;
+                    var componentChange = new ComponentChange
+                    {
+                        entity = entity,
+                        componentType = TypeIds.InternalC,
                         mask = mask,
                         resendMask = sync.resendMask,
                         entityHasReceivedConstructor = simulate.hasReceivedConstructor,

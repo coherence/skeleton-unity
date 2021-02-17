@@ -118,10 +118,42 @@ namespace Coherence.Generated
 		
 			}
 		
+            if(entityManager.HasComponent<ArchetypeComponent>(source))
+			{
+		        // ArchetypeComponent has fields, will copy it.			
+                if(!entityManager.HasComponent<ArchetypeComponent>(destination)) {
+                    entityManager.AddComponentData<ArchetypeComponent>(destination, new ArchetypeComponent());
+                }
+				var data = entityManager.GetComponentData<ArchetypeComponent>(source);
+				entityManager.SetComponentData<ArchetypeComponent>(destination, data);
+		
+			}
+		
             if(entityManager.HasComponent<Player>(source))
 			{
 		        // Player has no fields, will just add it.
 		        entityManager.AddComponentData<Player>(destination, new Player());
+		
+			}
+		
+            if(entityManager.HasComponent<A>(source))
+			{
+		        // A has no fields, will just add it.
+		        entityManager.AddComponentData<A>(destination, new A());
+		
+			}
+		
+            if(entityManager.HasComponent<B>(source))
+			{
+		        // B has no fields, will just add it.
+		        entityManager.AddComponentData<B>(destination, new B());
+		
+			}
+		
+            if(entityManager.HasComponent<C>(source))
+			{
+		        // C has no fields, will just add it.
+		        entityManager.AddComponentData<C>(destination, new C());
 		
 			}
 		

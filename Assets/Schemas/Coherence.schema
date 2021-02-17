@@ -1,1 +1,29 @@
 component Player
+
+component A
+component B
+component C
+
+archetype Monster
+  lod 0
+    WorldPosition
+    A
+    B
+    C
+  lod 1 [distance "10"]
+    WorldPosition
+    A
+
+archetype Hero
+  lod 0
+    WorldPosition
+    WorldOrientation
+    A
+    B
+  lod 1 [distance "10"]
+    WorldPosition
+    WorldOrientation
+    A
+  lod 2 [distance "20"]
+    WorldPosition
+    WorldOrientation

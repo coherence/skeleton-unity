@@ -100,12 +100,52 @@ namespace Coherence.Generated.Internal
 					break;
 				}
 
+				case TypeIds.InternalArchetypeComponent:
+				{
+					var hasComponentData = entityManager.HasComponent<ArchetypeComponent>(entity);
+					if (hasComponentData)
+					{
+						entityManager.RemoveComponent<ArchetypeComponent>(entity);
+					}
+					break;
+				}
+
 				case TypeIds.InternalPlayer:
 				{
 					var hasComponentData = entityManager.HasComponent<Player>(entity);
 					if (hasComponentData)
 					{
 						entityManager.RemoveComponent<Player>(entity);
+					}
+					break;
+				}
+
+				case TypeIds.InternalA:
+				{
+					var hasComponentData = entityManager.HasComponent<A>(entity);
+					if (hasComponentData)
+					{
+						entityManager.RemoveComponent<A>(entity);
+					}
+					break;
+				}
+
+				case TypeIds.InternalB:
+				{
+					var hasComponentData = entityManager.HasComponent<B>(entity);
+					if (hasComponentData)
+					{
+						entityManager.RemoveComponent<B>(entity);
+					}
+					break;
+				}
+
+				case TypeIds.InternalC:
+				{
+					var hasComponentData = entityManager.HasComponent<C>(entity);
+					if (hasComponentData)
+					{
+						entityManager.RemoveComponent<C>(entity);
 					}
 					break;
 				}
@@ -387,12 +427,76 @@ namespace Coherence.Generated.Internal
 					break;
 				}
 
+				case TypeIds.InternalArchetypeComponent:
+				{
+					var hasComponentData = entityManager.HasComponent<ArchetypeComponent_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<ArchetypeComponent_Sync>(entity);
+
+						syncData.resendMask |= fieldMask;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						Log.Warning($"Entity or component has been destroyed: {entity} ComponentTypeId: {componentTypeId}");
+					}
+					break;
+				}
+
 				case TypeIds.InternalPlayer:
 				{
 					var hasComponentData = entityManager.HasComponent<Player_Sync>(entity);
 					if (hasComponentData)
 					{
 						var syncData = entityManager.GetComponentData<Player_Sync>(entity);
+
+						syncData.resendMask |= fieldMask;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						Log.Warning($"Entity or component has been destroyed: {entity} ComponentTypeId: {componentTypeId}");
+					}
+					break;
+				}
+
+				case TypeIds.InternalA:
+				{
+					var hasComponentData = entityManager.HasComponent<A_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<A_Sync>(entity);
+
+						syncData.resendMask |= fieldMask;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						Log.Warning($"Entity or component has been destroyed: {entity} ComponentTypeId: {componentTypeId}");
+					}
+					break;
+				}
+
+				case TypeIds.InternalB:
+				{
+					var hasComponentData = entityManager.HasComponent<B_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<B_Sync>(entity);
+
+						syncData.resendMask |= fieldMask;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						Log.Warning($"Entity or component has been destroyed: {entity} ComponentTypeId: {componentTypeId}");
+					}
+					break;
+				}
+
+				case TypeIds.InternalC:
+				{
+					var hasComponentData = entityManager.HasComponent<C_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<C_Sync>(entity);
 
 						syncData.resendMask |= fieldMask;
 						entityManager.SetComponentData(entity, syncData);
@@ -536,6 +640,22 @@ namespace Coherence.Generated.Internal
 					break;
 				}
 
+				case TypeIds.InternalArchetypeComponent:
+				{
+					var hasComponentData = entityManager.HasComponent<ArchetypeComponent_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<ArchetypeComponent_Sync>(entity);
+						syncData.hasReceivedConstructor = true;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						// Ownership may have been lost since the packet was sent
+						Log.Trace($"Sync component has been destroyed: {entity} ArchetypeComponent_Sync");
+					}
+					break;
+				}
+
 				case TypeIds.InternalPlayer:
 				{
 					var hasComponentData = entityManager.HasComponent<Player_Sync>(entity);
@@ -548,6 +668,54 @@ namespace Coherence.Generated.Internal
 					{
 						// Ownership may have been lost since the packet was sent
 						Log.Trace($"Sync component has been destroyed: {entity} Player_Sync");
+					}
+					break;
+				}
+
+				case TypeIds.InternalA:
+				{
+					var hasComponentData = entityManager.HasComponent<A_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<A_Sync>(entity);
+						syncData.hasReceivedConstructor = true;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						// Ownership may have been lost since the packet was sent
+						Log.Trace($"Sync component has been destroyed: {entity} A_Sync");
+					}
+					break;
+				}
+
+				case TypeIds.InternalB:
+				{
+					var hasComponentData = entityManager.HasComponent<B_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<B_Sync>(entity);
+						syncData.hasReceivedConstructor = true;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						// Ownership may have been lost since the packet was sent
+						Log.Trace($"Sync component has been destroyed: {entity} B_Sync");
+					}
+					break;
+				}
+
+				case TypeIds.InternalC:
+				{
+					var hasComponentData = entityManager.HasComponent<C_Sync>(entity);
+					if (hasComponentData)
+					{
+						var syncData = entityManager.GetComponentData<C_Sync>(entity);
+						syncData.hasReceivedConstructor = true;
+						entityManager.SetComponentData(entity, syncData);
+					} else
+					{
+						// Ownership may have been lost since the packet was sent
+						Log.Trace($"Sync component has been destroyed: {entity} C_Sync");
 					}
 					break;
 				}
@@ -606,9 +774,29 @@ namespace Coherence.Generated.Internal
 				entityManager.RemoveComponent<Transferable_Sync>(entity);
 			}
 
+			if (entityManager.HasComponent<ArchetypeComponent_Sync>(entity))
+			{
+				entityManager.RemoveComponent<ArchetypeComponent_Sync>(entity);
+			}
+
 			if (entityManager.HasComponent<Player_Sync>(entity))
 			{
 				entityManager.RemoveComponent<Player_Sync>(entity);
+			}
+
+			if (entityManager.HasComponent<A_Sync>(entity))
+			{
+				entityManager.RemoveComponent<A_Sync>(entity);
+			}
+
+			if (entityManager.HasComponent<B_Sync>(entity))
+			{
+				entityManager.RemoveComponent<B_Sync>(entity);
+			}
+
+			if (entityManager.HasComponent<C_Sync>(entity))
+			{
+				entityManager.RemoveComponent<C_Sync>(entity);
 			}
 
 		}
@@ -657,6 +845,14 @@ namespace Coherence.Generated.Internal
 			{
 				entityManager.RemoveComponent<Sample_Rotation>(entity);
 			}
+
+
+
+
+
+
+
+
 
 
 

@@ -60,9 +60,33 @@ namespace Coherence.Generated.Internal
             unityReaders.Read(ref ignored, protocolStream);
 		}
 		
+		private void DeserializeArchetypeComponent(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		{
+            var ignored = new ArchetypeComponent();
+            unityReaders.Read(ref ignored, protocolStream);
+		}
+		
 		private void DeserializePlayer(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new Player();
+            unityReaders.Read(ref ignored, protocolStream);
+		}
+		
+		private void DeserializeA(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		{
+            var ignored = new A();
+            unityReaders.Read(ref ignored, protocolStream);
+		}
+		
+		private void DeserializeB(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		{
+            var ignored = new B();
+            unityReaders.Read(ref ignored, protocolStream);
+		}
+		
+		private void DeserializeC(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		{
+            var ignored = new C();
             unityReaders.Read(ref ignored, protocolStream);
 		}
 		
@@ -96,8 +120,24 @@ namespace Coherence.Generated.Internal
 					DeserializeTransferable(inProtocolStream);
                     break;
 
+                case TypeIds.InternalArchetypeComponent:
+					DeserializeArchetypeComponent(inProtocolStream);
+                    break;
+
                 case TypeIds.InternalPlayer:
 					DeserializePlayer(inProtocolStream);
+                    break;
+
+                case TypeIds.InternalA:
+					DeserializeA(inProtocolStream);
+                    break;
+
+                case TypeIds.InternalB:
+					DeserializeB(inProtocolStream);
+                    break;
+
+                case TypeIds.InternalC:
+					DeserializeC(inProtocolStream);
                     break;
 
 			}

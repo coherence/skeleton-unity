@@ -82,7 +82,31 @@ public class MessageSerializers
 
 	}
 
+	public void ArchetypeComponent(IOutBitStream bitstream, ArchetypeComponent data)
+	{
+
+			
+				bitstream.WriteIntegerRange(data.index, 15, -9999);
+			
+
+	}
+
 	public void Player(IOutBitStream bitstream, Player data)
+	{
+
+	}
+
+	public void A(IOutBitStream bitstream, A data)
+	{
+
+	}
+
+	public void B(IOutBitStream bitstream, B data)
+	{
+
+	}
+
+	public void C(IOutBitStream bitstream, C data)
 	{
 
 	}

@@ -75,10 +75,46 @@ namespace Coherence.Generated.Internal
 				});
 			}).WithStructuralChanges().Run();
 
+            Entities.WithAll<global::Coherence.Generated.ArchetypeComponent, Simulated>().WithNone<ArchetypeComponent_Sync>().ForEach((Entity entity) =>
+			{
+
+				EntityManager.AddComponentData(entity, new ArchetypeComponent_Sync 
+				{
+					howImportantAreYou = 600
+				});
+			}).WithStructuralChanges().Run();
+
             Entities.WithAll<global::Coherence.Generated.Player, Simulated>().WithNone<Player_Sync>().ForEach((Entity entity) =>
 			{
 
 				EntityManager.AddComponentData(entity, new Player_Sync 
+				{
+					howImportantAreYou = 600
+				});
+			}).WithStructuralChanges().Run();
+
+            Entities.WithAll<global::Coherence.Generated.A, Simulated>().WithNone<A_Sync>().ForEach((Entity entity) =>
+			{
+
+				EntityManager.AddComponentData(entity, new A_Sync 
+				{
+					howImportantAreYou = 600
+				});
+			}).WithStructuralChanges().Run();
+
+            Entities.WithAll<global::Coherence.Generated.B, Simulated>().WithNone<B_Sync>().ForEach((Entity entity) =>
+			{
+
+				EntityManager.AddComponentData(entity, new B_Sync 
+				{
+					howImportantAreYou = 600
+				});
+			}).WithStructuralChanges().Run();
+
+            Entities.WithAll<global::Coherence.Generated.C, Simulated>().WithNone<C_Sync>().ForEach((Entity entity) =>
+			{
+
+				EntityManager.AddComponentData(entity, new C_Sync 
 				{
 					howImportantAreYou = 600
 				});

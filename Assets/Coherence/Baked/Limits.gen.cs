@@ -94,7 +94,31 @@ namespace Coherence.Generated
 		
 	
 		
+		// Component name: ArchetypeComponent
+		
+		// index : int
+		
+		public static readonly int ArchetypeComponent_index_Min = -9999;
+		public static readonly int ArchetypeComponent_index_Max = 9999;
+		
+		
+		
+		
+	
+		
 		// Component name: Player
+		
+	
+		
+		// Component name: A
+		
+	
+		
+		// Component name: B
+		
+	
+		
+		// Component name: C
 		
 	
 	}
