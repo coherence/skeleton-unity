@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6b58ca8e478745dfab801a85671962e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uploadToken: e95935917f0bd4e2cbef2e49e4add468ee36bc4604
+  uploadToken: 
   port: 32001
   frequency: 60
   schemaBakeFolderGuid: 99a50a20117094acc9c8e91a1e61cb41

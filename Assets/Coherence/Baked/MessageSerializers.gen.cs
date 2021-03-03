@@ -63,21 +63,31 @@ public class MessageSerializers
 
 			
 				var converted_radius = coherenceToUnityConverters.FromUnityfloat(data.radius);
-				bitstream.WriteFixedPoint(converted_radius, 24, 40000);
+				bitstream.WriteFixedPoint(converted_radius, 24, 2400);
 			
 
 	}
 
-	public void SessionBased(IOutBitStream bitstream, SessionBased data)
-	{
-
-	}
-
-	public void Transferable(IOutBitStream bitstream, Transferable data)
+	public void ArchetypeComponent(IOutBitStream bitstream, ArchetypeComponent data)
 	{
 
 			
-				bitstream.WriteIntegerRange(data.participant, 15, -9999);
+				bitstream.WriteIntegerRange(data.index, 15, -9999);
+			
+
+	}
+
+	public void Persistence(IOutBitStream bitstream, Persistence data)
+	{
+
+			
+				var converted_uuid = coherenceToUnityConverters.FromUnityFixedString64(data.uuid);
+				bitstream.WriteShortString(converted_uuid);
+			
+
+			
+				var converted_expiry = coherenceToUnityConverters.FromUnityFixedString64(data.expiry);
+				bitstream.WriteShortString(converted_expiry);
 			
 
 	}
@@ -92,6 +102,19 @@ public class MessageSerializers
 
 			
 				bitstream.WriteIntegerRange(data.participant, 15, -9999);
+			
+
+	}
+
+	public void TransferAction(IOutBitStream bitstream, TransferAction data)
+	{
+
+			
+				bitstream.WriteIntegerRange(data.participant, 15, -9999);
+			
+
+			
+				bitstream.WriteBool(data.accepted);
 			
 
 	}

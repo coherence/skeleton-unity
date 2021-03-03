@@ -62,22 +62,32 @@ public class MessageDeserializers
 			
 
 			
-				var radius = bitstream.ReadFixedPoint(24, 40000);
+				var radius = bitstream.ReadFixedPoint(24, 2400);
 				data.radius = coherenceToUnityConverters.ToUnityfloat(radius);
 			
      
 	}
 
-	public void SessionBased(IInBitStream bitstream, ref SessionBased data)
-	{
-     
-	}
-
-	public void Transferable(IInBitStream bitstream, ref Transferable data)
+	public void ArchetypeComponent(IInBitStream bitstream, ref ArchetypeComponent data)
 	{
 
 			
-				data.participant =  bitstream.ReadIntegerRange(15, -9999);
+				data.index =  bitstream.ReadIntegerRange(15, -9999);
+			
+     
+	}
+
+	public void Persistence(IInBitStream bitstream, ref Persistence data)
+	{
+
+			
+				var uuid = bitstream.ReadShortString();
+				data.uuid = coherenceToUnityConverters.ToUnityFixedString64(uuid);
+			
+
+			
+				var expiry = bitstream.ReadShortString();
+				data.expiry = coherenceToUnityConverters.ToUnityFixedString64(expiry);
 			
      
 	}
@@ -92,6 +102,19 @@ public class MessageDeserializers
 
 			
 				data.participant =  bitstream.ReadIntegerRange(15, -9999);
+			
+     
+	}
+
+	public void TransferAction(IInBitStream bitstream, ref TransferAction data)
+	{
+
+			
+				data.participant =  bitstream.ReadIntegerRange(15, -9999);
+			
+
+			
+				data.accepted =  bitstream.ReadBool();
 			
      
 	}
