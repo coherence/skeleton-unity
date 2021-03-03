@@ -87,7 +87,7 @@ namespace Coherence.Generated.Internal
 			{
 				
 					var v = coherenceToUnityConverters.FromUnityfloat(data.radius);
-					bitstream.WriteFixedPoint(v, 24, 40000);
+					bitstream.WriteFixedPoint(v, 24, 2400);
 				
 			}
 			propertyMask >>= 1;
@@ -96,20 +96,38 @@ namespace Coherence.Generated.Internal
 
 		
 		
-		public void Write(in SessionBased data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
-		{
-	
-	     }
-
-		
-		
-		public void Write(in Transferable data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		public void Write(in ArchetypeComponent data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 		{
 	
 			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
 			{
 				
-					bitstream.WriteIntegerRange(data.participant, 15, -9999);
+					bitstream.WriteIntegerRange(data.index, 15, -9999);
+				
+			}
+			propertyMask >>= 1;
+	
+	     }
+
+		
+		
+		public void Write(in Persistence data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		{
+	
+			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
+			{
+				
+					var v = coherenceToUnityConverters.FromUnityFixedString64(data.uuid);
+					bitstream.WriteShortString(v);
+				
+			}
+			propertyMask >>= 1;
+	
+			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
+			{
+				
+					var v = coherenceToUnityConverters.FromUnityFixedString64(data.expiry);
+					bitstream.WriteShortString(v);
 				
 			}
 			propertyMask >>= 1;

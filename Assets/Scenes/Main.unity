@@ -737,10 +737,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2378406800507890058, guid: 356df2fdc05054d879bcdd9ae0534951, type: 3}
-      propertyPath: apiToken
-      value: 0bd4e2cbef2e49e4add468ee36bc4604
-      objectReference: {fileID: 0}
     - target: {fileID: 3655738038371963128, guid: 356df2fdc05054d879bcdd9ae0534951, type: 3}
       propertyPath: m_Name
       value: Interface

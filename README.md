@@ -1,5 +1,4 @@
-# Starter Project Unity (ECS version)
+# coherence ECS starter project
 
-This is a starting point to quickly get a [coherence](https://coherence.io) project up and running.
+This is a starting point to quickly get a [coherence](https://coherence.io) project up and running using ECS.
 
-It uses version 0.0.1 of the SDK.

@@ -138,18 +138,7 @@ namespace Coherence.Generated.Internal
 
 		}
 
-        private void DeserializeSessionBased(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
-        {
-
-			// No need to read empty components, just ensure that it's there
-            if (!entityManager.HasComponent<SessionBased>(entity))
-		    {
-				entityManager.AddComponent<SessionBased>(entity);
-			}
-
-		}
-
-        private void DeserializeTransferable(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        private void DeserializeArchetypeComponent(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
         {
 
             // If we own the entity, don't overwrite with downstream data from server
@@ -157,14 +146,36 @@ namespace Coherence.Generated.Internal
             if (componentOwnership)
 	        {
 	            // Read and discard data (the stream must always be read) 
-	            var temp = new Transferable();
+	            var temp = new ArchetypeComponent();
 				unityReaders.Read(ref temp, protocolStream);
 				return;
             }
             
     
 			// Overwrite components that don't use interpolation
-			var componentData = entityManager.GetComponentData<Transferable>(entity);
+			var componentData = entityManager.GetComponentData<ArchetypeComponent>(entity);
+			unityReaders.Read(ref componentData, protocolStream);
+			entityManager.SetComponentData(entity, componentData);
+    
+
+		}
+
+        private void DeserializePersistence(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)
+        {
+
+            // If we own the entity, don't overwrite with downstream data from server
+            // TODO: Server should never send downstream to the simulating client
+            if (componentOwnership)
+	        {
+	            // Read and discard data (the stream must always be read) 
+	            var temp = new Persistence();
+				unityReaders.Read(ref temp, protocolStream);
+				return;
+            }
+            
+    
+			// Overwrite components that don't use interpolation
+			var componentData = entityManager.GetComponentData<Persistence>(entity);
 			unityReaders.Read(ref componentData, protocolStream);
 			entityManager.SetComponentData(entity, componentData);
     
@@ -213,12 +224,12 @@ namespace Coherence.Generated.Internal
 				DeserializeWorldPositionQuery(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
-			case TypeIds.InternalSessionBased:
-				DeserializeSessionBased(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+			case TypeIds.InternalArchetypeComponent:
+				DeserializeArchetypeComponent(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
-			case TypeIds.InternalTransferable:
-				DeserializeTransferable(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
+			case TypeIds.InternalPersistence:
+				DeserializePersistence(entityManager, entity, componentOwnership, simulationFrame, inProtocolStream, justCreated, bitStream);
 				break;
 				
 			case TypeIds.InternalPlayer:
@@ -315,14 +326,14 @@ namespace Coherence.Generated.Internal
                     break;
 				}
 
-				case TypeIds.InternalSessionBased:
+				case TypeIds.InternalArchetypeComponent:
                 {
                     var justCreated = false;
-                    var hasComponentData = entityManager.HasComponent<SessionBased>(entity);
-                    var componentHasBeenRemoved = entityManager.HasComponent<SessionBased_Sync>(entity) && entityManager.GetComponentData<SessionBased_Sync>(entity).deletedAtTime > 0;
+                    var hasComponentData = entityManager.HasComponent<ArchetypeComponent>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<ArchetypeComponent_Sync>(entity) && entityManager.GetComponentData<ArchetypeComponent_Sync>(entity).deletedAtTime > 0;
                     if (!hasComponentData && !componentHasBeenRemoved)
                     {
-                        entityManager.AddComponentData(entity, new SessionBased());
+                        entityManager.AddComponentData(entity, new ArchetypeComponent());
                         justCreated = true;
                     }
 
@@ -330,14 +341,14 @@ namespace Coherence.Generated.Internal
                     break;
 				}
 
-				case TypeIds.InternalTransferable:
+				case TypeIds.InternalPersistence:
                 {
                     var justCreated = false;
-                    var hasComponentData = entityManager.HasComponent<Transferable>(entity);
-                    var componentHasBeenRemoved = entityManager.HasComponent<Transferable_Sync>(entity) && entityManager.GetComponentData<Transferable_Sync>(entity).deletedAtTime > 0;
+                    var hasComponentData = entityManager.HasComponent<Persistence>(entity);
+                    var componentHasBeenRemoved = entityManager.HasComponent<Persistence_Sync>(entity) && entityManager.GetComponentData<Persistence_Sync>(entity).deletedAtTime > 0;
                     if (!hasComponentData && !componentHasBeenRemoved)
                     {
-                        entityManager.AddComponentData(entity, new Transferable());
+                        entityManager.AddComponentData(entity, new Persistence());
                         justCreated = true;
                     }
 

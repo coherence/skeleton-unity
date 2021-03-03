@@ -62,12 +62,6 @@ class JoinSystem : SystemBase
 
         });
 
-        // This component makes the Entity disappear if we log out or disconnect.
-        EntityManager.AddComponentData(newPlayerEntity, new SessionBased
-        {
-
-        });
-
         // This component makes our keyboard input affect the Entity.
         EntityManager.AddComponentData(newPlayerEntity, new PlayerInput
         {
