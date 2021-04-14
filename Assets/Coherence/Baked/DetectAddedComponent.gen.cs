@@ -14,79 +14,88 @@ namespace Coherence.Generated.Internal
 	using Unity.Entities;
 	using Unity.Transforms;
 
-	[UpdateInGroup(typeof(PresentationSystemGroup))]
+	[UpdateInGroup(typeof(GatherChangesGroup))]
 	[UpdateBefore(typeof(DetectRemovedComponentsSystem))]
-    public class DetectAddedComponentsSystem : SystemBase
-    {
-        protected override void OnUpdate()
-        {
+	public class DetectAddedComponentsSystem : SystemBase
+	{
+		protected override void OnUpdate()
+		{
 
-            Entities.WithAll<Translation, Simulated>().WithNone<WorldPosition_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<Translation, Simulated>().WithNone<WorldPosition_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new WorldPosition_Sync 
+				EntityManager.AddComponentData(entity, new WorldPosition_Sync
 				{
 					howImportantAreYou = 1000
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<Rotation, Simulated>().WithNone<WorldOrientation_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<Rotation, Simulated>().WithNone<WorldOrientation_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new WorldOrientation_Sync 
+				EntityManager.AddComponentData(entity, new WorldOrientation_Sync
 				{
 					howImportantAreYou = 1000
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.LocalUser, Simulated>().WithNone<LocalUser_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<global::Coherence.Generated.LocalUser, Simulated>().WithNone<LocalUser_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new LocalUser_Sync 
+				EntityManager.AddComponentData(entity, new LocalUser_Sync
 				{
-					howImportantAreYou = 600
+					howImportantAreYou = 100
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.WorldPositionQuery, Simulated>().WithNone<WorldPositionQuery_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<global::Coherence.Generated.WorldPositionQuery, Simulated>().WithNone<WorldPositionQuery_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new WorldPositionQuery_Sync 
+				EntityManager.AddComponentData(entity, new WorldPositionQuery_Sync
 				{
-					howImportantAreYou = 600
+					howImportantAreYou = 100
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.ArchetypeComponent, Simulated>().WithNone<ArchetypeComponent_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<global::Coherence.Generated.ArchetypeComponent, Simulated>().WithNone<ArchetypeComponent_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new ArchetypeComponent_Sync 
+				EntityManager.AddComponentData(entity, new ArchetypeComponent_Sync
 				{
-					howImportantAreYou = 600
+					howImportantAreYou = 100
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.Persistence, Simulated>().WithNone<Persistence_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<global::Coherence.Generated.Persistence, Simulated>().WithNone<Persistence_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new Persistence_Sync 
+				EntityManager.AddComponentData(entity, new Persistence_Sync
 				{
-					howImportantAreYou = 600
+					howImportantAreYou = 100
 				});
 			}).WithStructuralChanges().Run();
 
-            Entities.WithAll<global::Coherence.Generated.Player, Simulated>().WithNone<Player_Sync>().ForEach((Entity entity) =>
+			Entities.WithAll<global::Coherence.Generated.ConnectedEntity, Simulated>().WithNone<ConnectedEntity_Sync>().ForEach((Entity entity) =>
 			{
 
-				EntityManager.AddComponentData(entity, new Player_Sync 
+				EntityManager.AddComponentData(entity, new ConnectedEntity_Sync
 				{
-					howImportantAreYou = 600
+					howImportantAreYou = 100
+				});
+			}).WithStructuralChanges().Run();
+
+			Entities.WithAll<global::Coherence.Generated.Player, Simulated>().WithNone<Player_Sync>().ForEach((Entity entity) =>
+			{
+
+				EntityManager.AddComponentData(entity, new Player_Sync
+				{
+					howImportantAreYou = 100
 				});
 			}).WithStructuralChanges().Run();
 
 			Dependency.Complete();
-        }
-    }
+		}
+	}
 }
 // ------------------ end of DetectAddedComponent.cs -----------------
 #endregion

@@ -136,6 +136,21 @@ namespace Coherence.Generated.Internal
 
 		
 		
+		public void Write(in ConnectedEntity data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
+		{
+	
+			if (bitstream.WriteMask((propertyMask & 0x01) != 0))
+			{
+				
+					bitstream.WriteEntity(data.value);
+				
+			}
+			propertyMask >>= 1;
+	
+	     }
+
+		
+		
 		public void Write(in Player data, uint propertyMask, Coherence.Replication.Protocol.Definition.IOutBitStream bitstream)
 		{
 	

@@ -25,7 +25,9 @@ static class TypeIds
 
 	public const uint InternalPersistence = 5;
 
-	public const uint InternalPlayer = 6;
+	public const uint InternalConnectedEntity = 6;
+
+	public const uint InternalPlayer = 7;
 
 	public const uint InternalAuthorityTransfer = 0;
 

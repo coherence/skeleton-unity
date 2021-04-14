@@ -31,15 +31,19 @@ namespace Coherence.Generated.Internal
 
 				case TypeIds.InternalAuthorityTransfer:
 				{
-					var hasRequestBuffer = mgr.HasComponent<AuthorityTransfer>(entity);
-					if (!hasRequestBuffer)
-					{
-						mgr.AddBuffer<AuthorityTransfer>(entity);
-					}
-					var buffer = mgr.GetBuffer<AuthorityTransfer>(entity);
 					var data = new AuthorityTransfer();
 					messageDeserializers.AuthorityTransfer(bitStream, ref data);
-					buffer.Add(data);
+
+					if (mgr.Exists(entity))
+					{
+						var hasRequestBuffer = mgr.HasComponent<AuthorityTransfer>(entity);
+						if (!hasRequestBuffer)
+						{
+							mgr.AddBuffer<AuthorityTransfer>(entity);
+						}
+						var buffer = mgr.GetBuffer<AuthorityTransfer>(entity);					
+						buffer.Add(data);
+					}
 					break;
 				}
 

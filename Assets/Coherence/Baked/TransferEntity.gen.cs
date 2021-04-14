@@ -14,8 +14,7 @@ namespace Coherence.Generated.Internal
 	using Unity.Entities;
 
 	[AlwaysUpdateSystem]
-	[UpdateInGroup(typeof(CoherenceSimulationSystemGroup))]
-	[UpdateAfter(typeof(SendEventSystem))]
+	[UpdateInGroup(typeof(CleanupChangesGroup))]
 	public class TransferEntitySystem : SystemBase
 	{
 		protected override void OnUpdate() 

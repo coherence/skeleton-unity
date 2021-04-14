@@ -21,8 +21,7 @@ namespace Coherence.Generated.Internal
     using Replication.Client.Unity.Ecs;
     using Replication.Unity;
 
-    // ReSharper disable once ClassNeverInstantiated.Global
-    [UpdateInGroup(typeof(PresentationSystemGroup))]
+    [UpdateInGroup(typeof(GatherChangesGroup))]
     [AlwaysUpdateSystem]
     public class DetectCommandsSentSystem : SystemBase
     {

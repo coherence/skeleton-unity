@@ -60,6 +60,12 @@ namespace Coherence.Generated.Internal
             unityReaders.Read(ref ignored, protocolStream);
 		}
 		
+		private void DeserializeConnectedEntity(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
+		{
+            var ignored = new ConnectedEntity();
+            unityReaders.Read(ref ignored, protocolStream);
+		}
+		
 		private void DeserializePlayer(Coherence.Replication.Protocol.Definition.IInBitStream protocolStream)
 		{
             var ignored = new Player();
@@ -94,6 +100,10 @@ namespace Coherence.Generated.Internal
 
                 case TypeIds.InternalPersistence:
 					DeserializePersistence(inProtocolStream);
+                    break;
+
+                case TypeIds.InternalConnectedEntity:
+					DeserializeConnectedEntity(inProtocolStream);
                     break;
 
                 case TypeIds.InternalPlayer:

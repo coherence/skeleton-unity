@@ -13,12 +13,22 @@ namespace Coherence.Generated
 	using Unity.Entities;
 	using Unity.Mathematics;
 	using Unity.Transforms;
+	using System.Collections.Generic;
+
+	public struct LastObservedLod : IComponentData
+	{
+		public int Level;
+	}
 
 	
 
 	public static class Archetype
 	{
 	
+
+		public static Dictionary<string, int> IndexForName = new Dictionary<string, int>() {
+		
+		};
 
 	
 	}

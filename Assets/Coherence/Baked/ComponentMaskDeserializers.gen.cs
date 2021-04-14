@@ -133,6 +133,22 @@ public class UnityReaders
 	}
 
 	
+	public uint Read(ref ConnectedEntity data, IInBitStream bitstream)
+	{
+		var propertyMask = (uint)0;
+
+
+		if (bitstream.ReadMask()) 
+		{
+			var coherenceField = bitstream.ReadEntity();
+			       data.value = coherenceField;
+			propertyMask |= 0b00000000000000000000000000000001;
+		}
+       
+		return propertyMask;
+	}
+
+	
 	public uint Read(ref Player data, IInBitStream bitstream)
 	{
 		var propertyMask = (uint)0;

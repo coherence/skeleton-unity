@@ -15,8 +15,7 @@ namespace Coherence.Generated.Internal
 	using Unity.Transforms;
 
 	[AlwaysUpdateSystem]
-	[UpdateInGroup(typeof(CoherenceSimulationSystemGroup))]
-	[UpdateAfter(typeof(TransferEntitySystem))]
+	[UpdateInGroup(typeof(CleanupChangesGroup))]
 	public class DeleteEventSystem : SystemBase
 	{
 		protected override void OnUpdate()

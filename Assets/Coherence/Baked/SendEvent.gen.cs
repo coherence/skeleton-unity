@@ -12,17 +12,14 @@ namespace Coherence.Generated.Internal
     using Unity.Entities;
     using global::Coherence.Generated;
 
-    // TODO: Remove some of these imports
     using Message;
     using Message.Serializer.Serialize;
     using MessageSync.Serialize;
-    using Coherence.Brisk.Connect;
     using Coherence.Brook;
-    using Coherence.Log;
     using Replication.Client.Unity.Ecs;
     using Replication.Unity;
 
-    [UpdateInGroup(typeof(CoherenceSimulationSystemGroup))]
+    [UpdateInGroup(typeof(GatherChangesGroup))]
     [AlwaysUpdateSystem]
     public class SendEventSystem : SystemBase
     {

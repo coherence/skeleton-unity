@@ -8,11 +8,12 @@
 			
 namespace Coherence.Generated
 {
+	using Coherence.Ecs;
+	using UnityEngine.Scripting;
 	using Unity.Collections;
 	using Unity.Entities;
 	using Unity.Mathematics;
 	using Unity.Transforms;
-
 	
 	// EcsComponentData: InternalAuthorityTransferData
 	public struct AuthorityTransfer : IBufferElementData
@@ -24,12 +25,7 @@ namespace Coherence.Generated
 	{
 		public int participant;
 	}
-
-	
-
-
 }
-
 
 // ------------------ end of BufferElementData.cs -----------------
 #endregion
