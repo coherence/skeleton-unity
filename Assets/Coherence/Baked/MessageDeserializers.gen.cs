@@ -24,14 +24,14 @@ namespace Coherence.Generated.Internal
 
 		public void Translation(IInBitStream bitstream, ref Translation data)
 		{
-			var Value = bitstream.ReadVector3f(24, 2400);
-			data.Value = coherenceToUnityConverters.ToUnityfloat3(Value);     
+			var value = bitstream.ReadVector3f(24, 2400);
+			data.Value = coherenceToUnityConverters.ToUnityfloat3(value);     
 		}
 
 		public void Rotation(IInBitStream bitstream, ref Rotation data)
 		{
-			var Value = bitstream.ReadUnitRotation();
-			data.Value = coherenceToUnityConverters.ToUnityquaternion(Value);     
+			var value = bitstream.ReadUnitRotation();
+			data.Value = coherenceToUnityConverters.ToUnityquaternion(value);     
 		}
 
 		public void LocalUser(IInBitStream bitstream, ref LocalUser data)

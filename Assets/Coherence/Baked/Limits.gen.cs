@@ -22,12 +22,12 @@ namespace Coherence.Generated
 		
 		// Component name: Translation
 		
-		// Value : float3
+		// value : float3
 		
 		
-		public static readonly float Translation_Value_Min = -2400f;
-		public static readonly float Translation_Value_Max = 2400f;
-		public static readonly float Translation_Value_Epsilon = 0.000286102294921875f;
+		public static readonly float Translation_value_Min = -2400f;
+		public static readonly float Translation_value_Max = 2400f;
+		public static readonly float Translation_value_Epsilon = 0.000286102294921875f;
 		
 		
 		
@@ -35,11 +35,11 @@ namespace Coherence.Generated
 		
 		// Component name: Rotation
 		
-		// Value : quaternion
+		// value : quaternion
 		
 		
 		
-		public static readonly float Rotation_Value_Epsilon = 0.01f; // TODO!
+		public static readonly float Rotation_value_Epsilon = 0.01f; // TODO!
 		
 		
 	

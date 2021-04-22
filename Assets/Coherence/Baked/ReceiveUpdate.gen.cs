@@ -599,21 +599,21 @@ namespace Coherence.Generated.Internal
 
 		private void RemoveInterpolationComponents(EntityManager entityManager, Entity entity)
 		{
-			if (entityManager.HasComponent<InterpolationComponent_Translation_Value>(entity))
+			if (entityManager.HasComponent<InterpolationComponent_Translation_value>(entity))
 			{
-				entityManager.RemoveComponent<InterpolationComponent_Translation_Value>(entity);
+				entityManager.RemoveComponent<InterpolationComponent_Translation_value>(entity);
 			}
-			if (entityManager.HasComponent<Sample_Translation_Value>(entity))
+			if (entityManager.HasComponent<Sample_Translation_value>(entity))
 			{
-				entityManager.RemoveComponent<Sample_Translation_Value>(entity);
+				entityManager.RemoveComponent<Sample_Translation_value>(entity);
 			}
-			if (entityManager.HasComponent<InterpolationComponent_Rotation_Value>(entity))
+			if (entityManager.HasComponent<InterpolationComponent_Rotation_value>(entity))
 			{
-				entityManager.RemoveComponent<InterpolationComponent_Rotation_Value>(entity);
+				entityManager.RemoveComponent<InterpolationComponent_Rotation_value>(entity);
 			}
-			if (entityManager.HasComponent<Sample_Rotation_Value>(entity))
+			if (entityManager.HasComponent<Sample_Rotation_value>(entity))
 			{
-				entityManager.RemoveComponent<Sample_Rotation_Value>(entity);
+				entityManager.RemoveComponent<Sample_Rotation_value>(entity);
 			}
 		}
 	}

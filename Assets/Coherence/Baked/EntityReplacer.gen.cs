@@ -17,7 +17,10 @@ namespace Coherence.Generated
 		public static void Replace(EntityManager entityManager, Entity networkEntity, Entity newEntity)
 		{
 #if UNITY_EDITOR
-			entityManager.SetName(newEntity, $"{newEntity} (remote)");
+			if (newEntity.Index<10000) // Prevents exceptions caused by a built-in limit of 16k unique entity names.
+			{
+				entityManager.SetName(newEntity, $"{newEntity} (remote)");
+			}
 #endif
 
 			CopyComponents(entityManager, networkEntity, newEntity);
@@ -130,30 +133,30 @@ namespace Coherence.Generated
 				entityManager.AddComponentData<Player>(destination, new Player());
 			}
 			// Interpolation components
-			if (entityManager.HasComponent<InterpolationComponent_Translation_Value>(source) &&
-				!entityManager.HasComponent<InterpolationComponent_Translation_Value>(destination)) {
+			if (entityManager.HasComponent<InterpolationComponent_Translation_value>(source) &&
+				!entityManager.HasComponent<InterpolationComponent_Translation_value>(destination)) {
 				entityManager.AddComponentData(destination, 
-					entityManager.GetComponentData<InterpolationComponent_Translation_Value>(source));
+					entityManager.GetComponentData<InterpolationComponent_Translation_value>(source));
 			}
 			// Sample buffers
-			if (entityManager.HasComponent<Sample_Translation_Value>(source) &&
-				!entityManager.HasComponent<Sample_Translation_Value>(destination)) {
-				entityManager.AddBuffer<Sample_Translation_Value>(destination);
-				entityManager.GetBuffer<Sample_Translation_Value>(destination).CopyFrom(
-					entityManager.GetBuffer<Sample_Translation_Value>(source));
+			if (entityManager.HasComponent<Sample_Translation_value>(source) &&
+				!entityManager.HasComponent<Sample_Translation_value>(destination)) {
+				entityManager.AddBuffer<Sample_Translation_value>(destination);
+				entityManager.GetBuffer<Sample_Translation_value>(destination).CopyFrom(
+					entityManager.GetBuffer<Sample_Translation_value>(source));
 			}
 			// Interpolation components
-			if (entityManager.HasComponent<InterpolationComponent_Rotation_Value>(source) &&
-				!entityManager.HasComponent<InterpolationComponent_Rotation_Value>(destination)) {
+			if (entityManager.HasComponent<InterpolationComponent_Rotation_value>(source) &&
+				!entityManager.HasComponent<InterpolationComponent_Rotation_value>(destination)) {
 				entityManager.AddComponentData(destination, 
-					entityManager.GetComponentData<InterpolationComponent_Rotation_Value>(source));
+					entityManager.GetComponentData<InterpolationComponent_Rotation_value>(source));
 			}
 			// Sample buffers
-			if (entityManager.HasComponent<Sample_Rotation_Value>(source) &&
-				!entityManager.HasComponent<Sample_Rotation_Value>(destination)) {
-				entityManager.AddBuffer<Sample_Rotation_Value>(destination);
-				entityManager.GetBuffer<Sample_Rotation_Value>(destination).CopyFrom(
-					entityManager.GetBuffer<Sample_Rotation_Value>(source));
+			if (entityManager.HasComponent<Sample_Rotation_value>(source) &&
+				!entityManager.HasComponent<Sample_Rotation_value>(destination)) {
+				entityManager.AddBuffer<Sample_Rotation_value>(destination);
+				entityManager.GetBuffer<Sample_Rotation_value>(destination).CopyFrom(
+					entityManager.GetBuffer<Sample_Rotation_value>(source));
 			}
 			// Command buffers
 			if (entityManager.HasComponent<AuthorityTransfer>(source) &&

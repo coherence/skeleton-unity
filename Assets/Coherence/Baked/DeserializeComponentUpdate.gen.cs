@@ -29,38 +29,40 @@ namespace Coherence.Generated.Internal
 
 		private void InterpolateTranslation(EntityManager entityManager, Entity entity, AbsoluteSimulationFrame simulationFrame, Translation tempComponentData)
 		{
+
 			// Ensure entities with interpolation also have Interpolation components and Sample components
-			if (!entityManager.HasComponent<InterpolationComponent_Translation_Value>(entity))
+			if (!entityManager.HasComponent<InterpolationComponent_Translation_value>(entity))
 			{
-				var interpolationData = new InterpolationComponent_Translation_Value() 
+				var interpolationData = new InterpolationComponent_Translation_value()
 				{
 					setupID = InterpolationSetupID.DefaultTranslation
 				};
 				entityManager.AddComponentData(entity, interpolationData);
-				entityManager.AddComponent<Sample_Translation_Value>(entity);
+				entityManager.AddComponent<Sample_Translation_value>(entity);
 			}
 
 			// Append buffer for components that use interpolation
 			InterpolationSystem_Translation
-				.AppendValueBuffer(entity, tempComponentData, entityManager.World, (ulong) simulationFrame.Frame);
+				.AppendvalueBuffer(entity, tempComponentData, entityManager.World, (ulong) simulationFrame.Frame);
 		}
 
 		private void InterpolateRotation(EntityManager entityManager, Entity entity, AbsoluteSimulationFrame simulationFrame, Rotation tempComponentData)
 		{
+
 			// Ensure entities with interpolation also have Interpolation components and Sample components
-			if (!entityManager.HasComponent<InterpolationComponent_Rotation_Value>(entity))
+			if (!entityManager.HasComponent<InterpolationComponent_Rotation_value>(entity))
 			{
-				var interpolationData = new InterpolationComponent_Rotation_Value() 
+				var interpolationData = new InterpolationComponent_Rotation_value()
 				{
 					setupID = InterpolationSetupID.DefaultRotation
 				};
 				entityManager.AddComponentData(entity, interpolationData);
-				entityManager.AddComponent<Sample_Rotation_Value>(entity);
+				entityManager.AddComponent<Sample_Rotation_value>(entity);
 			}
 
 			// Append buffer for components that use interpolation
 			InterpolationSystem_Rotation
-				.AppendValueBuffer(entity, tempComponentData, entityManager.World, (ulong) simulationFrame.Frame);
+				.AppendvalueBuffer(entity, tempComponentData, entityManager.World, (ulong) simulationFrame.Frame);
 		}
 
 		private void DeserializeWorldPosition(EntityManager entityManager, Entity entity, bool componentOwnership, AbsoluteSimulationFrame simulationFrame, Coherence.Replication.Protocol.Definition.IInBitStream protocolStream, bool justCreated, IInBitStream bitStream)

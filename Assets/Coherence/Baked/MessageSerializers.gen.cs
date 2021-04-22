@@ -24,14 +24,14 @@ namespace Coherence.Generated.Internal
 	
 		public void WorldPosition(IOutBitStream bitstream, Translation data)
 		{
-			var converted_Value = coherenceToUnityConverters.FromUnityfloat3(data.Value);
-			bitstream.WriteVector3f(converted_Value, 24, 2400);
+			var converted_value = coherenceToUnityConverters.FromUnityfloat3(data.Value);
+			bitstream.WriteVector3f(converted_value, 24, 2400);
 		}
 	
 		public void WorldOrientation(IOutBitStream bitstream, Rotation data)
 		{
-			var converted_Value = coherenceToUnityConverters.FromUnityquaternion(data.Value);
-			bitstream.WriteUnitRotation(converted_Value);
+			var converted_value = coherenceToUnityConverters.FromUnityquaternion(data.Value);
+			bitstream.WriteUnitRotation(converted_value);
 		}
 	
 		public void LocalUser(IOutBitStream bitstream, LocalUser data)

@@ -34,7 +34,7 @@ namespace Coherence.Generated
 			var deltaTime = Time.DeltaTime;
 			var setups = Interpolation.GetSetups();
 
-			Entities.WithNone<Simulated>().ForEach((ref Translation translation, ref DynamicBuffer<Sample_Translation_Value> buffer, ref InterpolationComponent_Translation_Value interpolation) =>
+			Entities.WithNone<Simulated>().ForEach((ref Translation translation, ref DynamicBuffer<Sample_Translation_value> buffer, ref InterpolationComponent_Translation_value interpolation) =>
 			{
 				if (disabled) // Interpolation can be disabled in the ConsolePanel for debug purposes
 				{
@@ -85,7 +85,13 @@ namespace Coherence.Generated
 					GetCatmullRomPoint(values, frames, frame, setup);
 
 				// Smoothly move from current position to target (interpolated) position. Elasticity is seconds to reach target.
-				translation.Value = SmoothDamp(translation.Value, targetPosition, ref interpolation.velocity, setup.elasticity, 10000, deltaTime);
+				if (setup.elasticity > 0)
+				{
+					translation.Value = SmoothDamp(translation.Value, targetPosition, ref interpolation.velocity, setup.elasticity, 10000, deltaTime);
+				} else 
+				{
+					translation.Value = targetPosition;
+				}
 
 				frames.Dispose();
 				values.Dispose();
@@ -95,17 +101,17 @@ namespace Coherence.Generated
 		}
 
 		// Add a new sample to the end of the sample buffer, first removing the oldest sample if the buffer is full
-		public static void AppendValueBuffer(Entity entity, Translation newTranslation, World world, ulong simulationFrame)
+		public static void AppendvalueBuffer(Entity entity, Translation newTranslation, World world, ulong simulationFrame)
 		{
-			if (!world.EntityManager.HasComponent<InterpolationComponent_Translation_Value>(entity))
+			if (!world.EntityManager.HasComponent<InterpolationComponent_Translation_value>(entity))
 			{
-				Debug.LogWarning("Entity is missing InterpolationComponent_Translation_Value: " + entity);
+				Debug.LogWarning("Entity is missing InterpolationComponent_Translation_value: " + entity);
 				return;
 			}
 
-			var interpolation = world.EntityManager.GetComponentData<InterpolationComponent_Translation_Value>(entity);
+			var interpolation = world.EntityManager.GetComponentData<InterpolationComponent_Translation_value>(entity);
 			var setup = Interpolation.GetSetup(interpolation.setupID);
-			var buffer = world.EntityManager.GetBuffer<Sample_Translation_Value>(entity);
+			var buffer = world.EntityManager.GetBuffer<Sample_Translation_value>(entity);
 
 			// Throttle sample rate by dropping samples on the receiving side. This lowers update frequency for easier interpolation debugging.
 			if (throttleSampleRate > 0)
@@ -136,7 +142,7 @@ namespace Coherence.Generated
 			}
 
 			// Create a new sample of the field.
-			var sample = new Sample_Translation_Value
+			var sample = new Sample_Translation_value
 			{
 				simulationFrame = simulationFrame,
 				value = newTranslation.Value,
@@ -167,13 +173,13 @@ namespace Coherence.Generated
 	}
 
 	[InternalBufferCapacity(5)]
-	public struct Sample_Translation_Value : IBufferElementData
+	public struct Sample_Translation_value : IBufferElementData
 	{
 		public ulong simulationFrame;
 		public float3 value;
 	}
 
-	public struct InterpolationComponent_Translation_Value : IComponentData
+	public struct InterpolationComponent_Translation_value : IComponentData
 	{
 		public InterpolationSetupID setupID;
 		public float latency;
@@ -199,7 +205,7 @@ namespace Coherence.Generated
 			var deltaTime = Time.DeltaTime;
 			var setups = Interpolation.GetSetups();
 
-			Entities.WithNone<Simulated>().ForEach((ref Rotation rotation, ref DynamicBuffer<Sample_Rotation_Value> buffer, ref InterpolationComponent_Rotation_Value interpolation) =>
+			Entities.WithNone<Simulated>().ForEach((ref Rotation rotation, ref DynamicBuffer<Sample_Rotation_value> buffer, ref InterpolationComponent_Rotation_value interpolation) =>
 			{
 				if (disabled) // Interpolation can be disabled in the ConsolePanel for debug purposes
 				{
@@ -258,17 +264,17 @@ namespace Coherence.Generated
 		}
 
 		// Add a new sample to the end of the sample buffer, first removing the oldest sample if the buffer is full
-		public static void AppendValueBuffer(Entity entity, Rotation newRotation, World world, ulong simulationFrame)
+		public static void AppendvalueBuffer(Entity entity, Rotation newRotation, World world, ulong simulationFrame)
 		{
-			if (!world.EntityManager.HasComponent<InterpolationComponent_Rotation_Value>(entity))
+			if (!world.EntityManager.HasComponent<InterpolationComponent_Rotation_value>(entity))
 			{
-				Debug.LogWarning("Entity is missing InterpolationComponent_Rotation_Value: " + entity);
+				Debug.LogWarning("Entity is missing InterpolationComponent_Rotation_value: " + entity);
 				return;
 			}
 
-			var interpolation = world.EntityManager.GetComponentData<InterpolationComponent_Rotation_Value>(entity);
+			var interpolation = world.EntityManager.GetComponentData<InterpolationComponent_Rotation_value>(entity);
 			var setup = Interpolation.GetSetup(interpolation.setupID);
-			var buffer = world.EntityManager.GetBuffer<Sample_Rotation_Value>(entity);
+			var buffer = world.EntityManager.GetBuffer<Sample_Rotation_value>(entity);
 
 			// Throttle sample rate by dropping samples on the receiving side. This lowers update frequency for easier interpolation debugging.
 			if (throttleSampleRate > 0)
@@ -292,7 +298,7 @@ namespace Coherence.Generated
 			}
 
 			// Create a new sample of the field.
-			var sample = new Sample_Rotation_Value
+			var sample = new Sample_Rotation_value
 			{
 				simulationFrame = simulationFrame,
 				value = newRotation.Value,
@@ -323,13 +329,13 @@ namespace Coherence.Generated
 	}
 
 	[InternalBufferCapacity(5)]
-	public struct Sample_Rotation_Value : IBufferElementData
+	public struct Sample_Rotation_value : IBufferElementData
 	{
 		public ulong simulationFrame;
 		public quaternion value;
 	}
 
-	public struct InterpolationComponent_Rotation_Value : IComponentData
+	public struct InterpolationComponent_Rotation_value : IComponentData
 	{
 		public InterpolationSetupID setupID;
 		public float latency;

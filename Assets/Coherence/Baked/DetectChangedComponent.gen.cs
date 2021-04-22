@@ -32,7 +32,7 @@ namespace Coherence.Generated.Internal
 			networkSystem = World.GetExistingSystem<NetworkSystem>();
 			frameCountSystem = World.GetExistingSystem<FrameCountSystem>();
 		}
-		
+
 		protected override void OnDestroy()
 		{
 			base.OnDestroy();
@@ -85,24 +85,31 @@ namespace Coherence.Generated.Internal
 		{
 			var localComponentChanges = componentChanges.AsParallelWriter();
 			var simulationFrame = frameCountSystem.SimulationFrame;
+			var time = Time.ElapsedTime;
 
 			Entities.ForEach((Entity entity, ref WorldPosition_Sync sync, in Translation data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
 					mask = 0xffffffff;
 				}
 
-				if (HasNoticeableDifference(data.Value, sync.lastSentData.Value, CoherenceLimits.Translation_Value_Epsilon) ) mask |= 0b00000000000000000000000000000001;
+				if (HasNoticeableDifference(data.Value, sync.lastSentData.Value, CoherenceLimits.Translation_value_Epsilon) ) mask |= 0b00000000000000000000000000000001;
 
 				if (mask == 0)
 				{
 					return;
 				}
-				CheckRange(data.Value.x, CoherenceLimits.Translation_Value_Min, CoherenceLimits.Translation_Value_Max);
-				CheckRange(data.Value.y, CoherenceLimits.Translation_Value_Min, CoherenceLimits.Translation_Value_Max);
-				CheckRange(data.Value.z, CoherenceLimits.Translation_Value_Min, CoherenceLimits.Translation_Value_Max);
+				CheckRange(data.Value.x, CoherenceLimits.Translation_value_Min, CoherenceLimits.Translation_value_Max);
+				CheckRange(data.Value.y, CoherenceLimits.Translation_value_Min, CoherenceLimits.Translation_value_Max);
+				CheckRange(data.Value.z, CoherenceLimits.Translation_value_Min, CoherenceLimits.Translation_value_Max);
 
 				var componentChange = new ComponentChange
 				{
@@ -119,17 +126,24 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref WorldOrientation_Sync sync, in Rotation data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
 					mask = 0xffffffff;
 				}
 
-				if (HasNoticeableDifference(data.Value, sync.lastSentData.Value, CoherenceLimits.Rotation_Value_Epsilon) ) mask |= 0b00000000000000000000000000000001;
+				if (HasNoticeableDifference(data.Value, sync.lastSentData.Value, CoherenceLimits.Rotation_value_Epsilon) ) mask |= 0b00000000000000000000000000000001;
 
 				if (mask == 0)
 				{
@@ -151,10 +165,17 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref LocalUser_Sync sync, in global::Coherence.Generated.LocalUser data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
@@ -184,10 +205,17 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref WorldPositionQuery_Sync sync, in global::Coherence.Generated.WorldPositionQuery data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
@@ -222,10 +250,17 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref ArchetypeComponent_Sync sync, in global::Coherence.Generated.ArchetypeComponent data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
@@ -255,10 +290,17 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref Persistence_Sync sync, in global::Coherence.Generated.Persistence data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
@@ -289,10 +331,17 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref ConnectedEntity_Sync sync, in global::Coherence.Generated.ConnectedEntity data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
@@ -321,10 +370,17 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Entities.ForEach((Entity entity, ref Player_Sync sync, in global::Coherence.Generated.Player data, in Simulated simulate) =>
 			{
+				if (time - sync.lastSampledTime < sync.minSamplingTime)
+				{
+					return;
+				}
+
+
 				uint mask = 0;
 				if (!sync.hasBeenSerialized)
 				{
@@ -351,6 +407,7 @@ namespace Coherence.Generated.Internal
 
 				sync.lastSentData = data;
 				sync.hasBeenSerialized = true;
+				sync.lastSampledTime = time;
 			}).ScheduleParallel();
 
 			Dependency.Complete();
